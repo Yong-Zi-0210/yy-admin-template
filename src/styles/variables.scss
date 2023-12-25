@@ -1,0 +1,25 @@
+// sidebar
+$menuText: #333333;
+$menuActiveText: #409eff;
+$subMenuActiveText: #409eff; //https://github.com/ElemeFE/element/issues/12951
+$menuHoverText: #ffffff;
+$subMenuHoverText: #ffffff;
+
+$menuBg: #ffffff;
+$menuHover: #418cd6;
+$menuActive: rgb(217, 236, 255);
+$subMenuActive: rgb(217, 236, 255);
+$subMenuBg: #ffffff;
+$subMenuHover: #418cd6;
+
+$sideBarWidth: 210px;
+
+:root {
+  /** Header 区域 = NavigationBar 组件 + TagsView 组件 */
+  --v3-header-height: calc(
+    var(--v3-navigationbar-height) + var(--v3-tagsview-height)
+  );
+  --v3-header-bg-color: #ffffff;
+  /** NavigationBar 组件 */
+  --v3-navigationbar-height: 50px;
+}
