@@ -4,24 +4,15 @@ export default [
     path: "/usedCar",
     component: Layout,
     redirect: "/usedCar/agency",
-    meta: { title: "eshouche", svgIcon: "used-car" },
+    meta: { title: "二手车", svgIcon: "used-car" },
     children: [
-      {
-        path: "agency",
-        component: () => import("@/views/usedCar/agency/index.vue"),
-        name: "Agency",
-        meta: {
-          title: "jxshang",
-          svgIcon: "",
-        },
-      },
       {
         path: "carInfo",
         component: () => import("@/views/usedCar/carInfo/index.vue"),
         name: "CarInfo",
         meta: {
-          title: "clxinxi",
-          svgIcon: "",
+          title: "车辆信息",
+          svgIcon: "carInfo",
         },
       },
       {
@@ -29,7 +20,7 @@ export default [
         component: () => import("@/views/usedCar/communication/index.vue"),
         name: "Communication",
         meta: {
-          title: "沟通",
+          title: "沟通管理",
           svgIcon: "communication",
         },
       },

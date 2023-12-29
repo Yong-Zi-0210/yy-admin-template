@@ -16,6 +16,7 @@
           v-for="route in routes"
           :key="route.path"
           :item="route"
+          :isCollapse="isCollapse"
           :base-path="route.path"
         />
       </el-menu>

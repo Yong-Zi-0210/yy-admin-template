@@ -1,3 +1,4 @@
+import { ApiResponseData } from "@/utils/request/types";
 export interface LoginRequestData {
   /** 用户名 */
   account: string;
@@ -14,14 +15,6 @@ interface BodyData {
 }
 
 /** 所有 api 接口的响应数据都应该准守该格式 */
-interface ApiResponseData<T> {
-  errorCode: number;
-  body: T;
-  errorMessage: string;
-  responseTime: any;
-  sign: string;
-  tranStatus: string;
-}
 
 export type LoginCodeResponseData = ApiResponseData<BodyData>;
 

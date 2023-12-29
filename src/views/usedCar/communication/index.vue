@@ -1,31 +1,173 @@
 <template>
-  <div class="app-contanier">
-    <div class="filter"></div>
-    <el-table :data="tableData" stripe style="width: 100%">
+  <div class="app-container">
+    <div class="filter">
+      <el-form :model="filterForm">
+        <el-form-item label="状态">
+          <el-select v-model="filterForm.status">
+            <el-option
+              v-for="(item, index) in statusOptions"
+              :key="index"
+              :value="item.value"
+              :label="item.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="filter-oper">
+        <el-button type="primary" @click="search">搜索</el-button>
+        <el-button @click="reset">重置</el-button>
+      </div>
+    </div>
+    <el-table
+      :data="tableData"
+      :max-height="maxHeight"
+      stripe
+      style="width: 100%"
+    >
       <el-table-column prop="id" label="ID" width="180" />
-      <el-table-column prop="username" label="用户名" width="180" />
-      <el-table-column prop="address" label="经销商名称" />
-      <el-table-column prop="address" label="二手车名称" />
-      <el-table-column prop="address" label="状态" />
-      <el-table-column prop="address" label="创建时间" />
-      <el-table-column prop="address" label="修改时间" />
+      <el-table-column prop="userRealName" label="用户名" width="180" />
+      <el-table-column prop="dealer" label="经销商名称" />
+      <el-table-column prop="carTitle" label="二手车名称" />
+      <el-table-column prop="statusDescription" label="状态">
+        <template v-slot="scope">
+          <el-popover
+            v-if="scope.row.status === '001'"
+            placement="top"
+            :width="120"
+            trigger="hover"
+            :visible="scope.row.visible"
+          >
+            <template #reference>
+              <el-text :type="statusMap[scope.row.status]">{{
+                scope.row.statusDescription
+              }}</el-text>
+            </template>
+            <div style="font-size: 12px; margin-bottom: 10px">确认沟通</div>
+            <el-button size="small" @click="scope.row.visible = false"
+              >取消</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              @click="handleUpdate(scope.row)"
+              >确定</el-button
+            >
+          </el-popover>
+          <el-text v-else :type="statusMap[scope.row.status]">{{
+            scope.row.statusDescription
+          }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.createTime" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="modifyTime" label="修改时间">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.createTime" />
+        </template>
+      </el-table-column>
     </el-table>
+    <div class="pagination">
+      <el-pagination
+        v-model:current-page="pageParams.currentPage"
+        v-model:page-size="pageParams.pageSize"
+        :page-sizes="[50, 150, 300, 400]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { communication } from "@/api/usedCar";
+import FromatDate from "@/views/components/FromatDate.vue";
+import { communication, update } from "@/api/communicate";
+import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
+import { ElMessage } from "element-plus";
+
+useTableHeight(); // 动态修改表格高度
 const tableData = ref([]);
-const filterParams = reactive({
+const statusOptions = [
+  { value: "", label: "全部" },
+  { value: "001", label: "待沟通" },
+  { value: "090", label: "已确认" },
+];
+const statusMap = {
+  "001": "warning",
+  "090": "success",
+} as any;
+
+// 过滤字段
+const filterForm = reactive({
   status: "",
 });
+// 分页信息
+const total = ref(0);
+const pageParams = reactive({
+  currentPage: 1,
+  pageSize: 50,
+});
 
+// 列表请求
 const getData = async () => {
   const res = await communication({
-    ...filterParams,
+    ...pageParams,
+    condition: {
+      ...filterForm,
+    },
   });
-  console.log(res);
+  const { body } = res;
+  total.value = body.totalCount;
+  tableData.value = body.pageItems;
 };
 // 初始化列表数据
 getData();
+
+// 搜索
+const search = () => {
+  getData();
+};
+
+// 确认沟通
+const handleUpdate = async (row: any) => {
+  try {
+    await update({ id: row.id });
+    row.visible = false;
+    ElMessage.success("修改成功");
+  } catch (error) {}
+};
+
+// 修改每页数量
+const handleSizeChange = (value: number) => {
+  pageParams.pageSize = value;
+  getData();
+};
+
+// 改变当前页
+const handleCurrentChange = (value: number) => {
+  pageParams.currentPage = value;
+  getData();
+};
+// 重置
+const reset = () => {
+  filterForm.status = "";
+};
 </script>
+<style lang="scss" scoped>
+.filter {
+  display: flex;
+  justify-content: flex-end;
+  .filter-oper {
+    margin-left: 20px;
+  }
+}
+.pagination {
+  margin-top: 20px;
+}
+</style>
+@/hooks/useTableHeight@/hooks/useRouteListener

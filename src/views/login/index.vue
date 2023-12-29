@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import useSettingsStore from "@/store/module/settings";
 import useUserStore from "@/store/module/user";
-import { type FormInstance, FormRules } from "element-plus";
+import { type FormInstance, FormRules, ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 
 const settingsStore = useSettingsStore();
@@ -89,6 +89,7 @@ const handleLogin = async (formEl: FormInstance | undefined) => {
           ...loginForm,
         })
         .then(() => {
+          ElMessage.success("登录成功");
           router.push("/");
         });
     } else {

@@ -16,6 +16,7 @@ export interface UserInfo {
   phone: string;
   status: string;
   systemUserId: number;
+  dealerId: number;
 }
 
 const useUserStore = defineStore("user", () => {

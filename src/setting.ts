@@ -1,5 +1,5 @@
 export default {
-  title: "xx系统管理平台" as string,
+  title: "途途社区系统管理平台" as string,
   show: false,
   /**
    * @type {boolean} true | false

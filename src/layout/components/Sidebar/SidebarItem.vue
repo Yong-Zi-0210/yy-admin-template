@@ -1,5 +1,10 @@
 <template>
-  <div v-if="!props.item.meta?.hidden">
+  <div
+    v-if="!props.item.meta?.hidden"
+    :class="{
+      'simple-mode': props.isCollapse,
+    }"
+  >
     <template
       v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children"
     >
@@ -68,6 +73,7 @@ interface Props {
   item: RouteRecordRaw;
   isNest?: boolean;
   basePath?: string;
+  isCollapse?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -145,14 +151,12 @@ const resolvePath = (routePath: string) => {
 }
 
 .simple-mode {
-  &.first-level {
-    :deep(.el-sub-menu) {
-      .el-sub-menu__icon-arrow {
-        display: none;
-      }
-      span {
-        visibility: hidden;
-      }
+  :deep(.el-sub-menu) {
+    .el-sub-menu__icon-arrow {
+      display: none;
+    }
+    span {
+      visibility: hidden;
     }
   }
 }

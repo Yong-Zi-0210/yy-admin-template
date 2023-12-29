@@ -12,7 +12,7 @@ export function getLoginCodeApi() {
 /** 登录并返回 Token */
 export function loginApi(data: Login.LoginRequestData) {
   return request<Login.LoginResponseData>({
-    url: "/manage-server/login",
+    url: "login",
     method: "post",
     data,
   });
@@ -21,7 +21,7 @@ export function loginApi(data: Login.LoginRequestData) {
 /** 登出 */
 export function logoutApi() {
   return request<Login.LogoutReaponseData>({
-    url: "/manage-server/logout",
+    url: "logout",
     method: "post",
   });
 }

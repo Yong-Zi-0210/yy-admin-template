@@ -1,20 +1,18 @@
-interface RowData {
-  id: string;
-  createTime: string;
-  modifyTime: string;
-  dealerId: number;
-  carId: number;
-  carTitle: string;
-  userId: number;
-  userRealName: string;
-  userContactPhone: string;
+interface PageItems {
+  [key: string]: any;
+}
+export interface Condition {
+  brandId: number | string;
   status: string;
-  confirmTime: string;
-  confirmOperatorId: number;
-  statusDescription: string;
-  confirmOperatorName: string;
 }
-export interface CommunicationResponse {
-  communicates: RowData[];
+export interface usedCarResponse {
+  currentIndex: number;
+  totalCount: number;
+  totalPage: number;
+  pageItems: PageItems[];
 }
-export interface CommunicationRequest {}
+export interface usedCarRequest {
+  pageSize: number;
+  currentPage: number;
+  condition: Condition;
+}

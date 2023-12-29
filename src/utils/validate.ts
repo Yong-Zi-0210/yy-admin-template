@@ -1,3 +1,8 @@
+/** 判断是否是正整数 */
+export function isPositiveInteger(value: number) {
+  return Number.isInteger(value) && value > 0;
+}
+
 /** 判断是否为数组 */
 export const isArray = (arg: unknown) => {
   return Array.isArray

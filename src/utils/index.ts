@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 /** 用 JS 获取全局 css 变量 */
 export const getCssVariableValue = (cssVariableName: string) => {
   let cssVariableValue = "";
@@ -12,6 +13,7 @@ export const getCssVariableValue = (cssVariableName: string) => {
   return cssVariableValue;
 };
 
+/** 获取随机串 */
 export function getRandomString(length: number) {
   const characters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -24,3 +26,17 @@ export function getRandomString(length: number) {
 
   return randomString;
 }
+
+/** 格式化时间 */
+export const formatDateTime = (
+  time: string | number | Date,
+  format = "YYYY-MM-DD HH:mm:ss"
+) => {
+  return time ? dayjs(new Date(time)).format(format) : "N/A";
+};
+
+/** 获取时间戳 */
+
+export const timestamp = (time: string | number | Date) => {
+  return time ? dayjs(new Date(time)).unix() : "N/A";
+};
