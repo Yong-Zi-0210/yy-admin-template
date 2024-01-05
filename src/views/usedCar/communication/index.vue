@@ -34,13 +34,16 @@
             v-if="scope.row.status === '001'"
             placement="top"
             :width="120"
-            trigger="hover"
+            trigger="click"
             :visible="scope.row.visible"
           >
             <template #reference>
-              <el-text :type="statusMap[scope.row.status]">{{
-                scope.row.statusDescription
-              }}</el-text>
+              <el-text
+                :type="statusMap[scope.row.status]"
+                @click="scope.row.visible = true"
+                style="cursor: pointer"
+                >{{ scope.row.statusDescription }}</el-text
+              >
             </template>
             <div style="font-size: 12px; margin-bottom: 10px">确认沟通</div>
             <el-button size="small" @click="scope.row.visible = false"
