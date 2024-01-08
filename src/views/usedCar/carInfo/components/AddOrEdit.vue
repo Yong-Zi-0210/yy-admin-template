@@ -32,26 +32,26 @@ const carInfo = ref<AnyObject>([]);
 // 基本信息
 const baseRules = useRules();
 const baseForm = reactive<AnyObject>({
-  name: "奔驰c200L", // 车名
-  city: "上海", // 城市
-  price: "200000", // 价格
+  name: "", // 车名
+  city: "", // 城市
+  price: "", // 价格
   displayImage: "", // 显示图片
   images: [] as any[], // 图集
   checkReports: [] as any[], // 车检报告图片
-  description: "描述", // 描述
-  tag: "省油", // 标签
-  type: "轿车", // 车型
+  description: "", // 描述
+  tag: "", // 标签
+  type: "", // 车型
   brandId: "", // 品牌id
   brand: "", // 品牌名称
   firstPlateTime: "", // 首次上牌时间
-  transferNum: "2", // 过户次数
-  energy: "汽油", // 能源
-  mileage: "200", // 里程
-  carAge: "2", // 车龄
+  transferNum: "", // 过户次数
+  energy: "", // 能源
+  mileage: "", // 里程
+  carAge: "", // 车龄
   transmission: "", // 变速箱
   displacement: "", // 排量
-  emissionStandard: "200", // 排量标准
-  drivingMeans: "4驱", // 驱动
+  emissionStandard: "", // 排量标准
+  drivingMeans: "", // 驱动
 });
 const operType = computed(() => (!props.id ? "add" : "edit"));
 const title = computed(() => (props.id ? "修改信息" : "新增"));

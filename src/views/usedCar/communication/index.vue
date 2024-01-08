@@ -21,14 +21,37 @@
     <el-table
       :data="tableData"
       :max-height="maxHeight"
-      stripe
+      border
       style="width: 100%"
+      v-loading="loading"
     >
-      <el-table-column prop="id" label="ID" width="180" />
+      <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="userRealName" label="用户名" width="180" />
       <el-table-column prop="dealer" label="经销商名称" />
       <el-table-column prop="carTitle" label="二手车名称" />
       <el-table-column prop="statusDescription" label="状态">
+        <template v-slot="scope">
+          <el-text
+            v-if="scope.row.status === '001'"
+            :type="statusMap[scope.row.status]"
+            >{{ scope.row.statusDescription }}</el-text
+          >
+          <el-text v-else :type="statusMap[scope.row.status]">{{
+            scope.row.statusDescription
+          }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="180">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.createTime" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="modifyTime" label="修改时间" width="180">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.createTime" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="oper" label="操作" width="120">
         <template v-slot="scope">
           <el-popover
             v-if="scope.row.status === '001'"
@@ -38,11 +61,11 @@
             :visible="scope.row.visible"
           >
             <template #reference>
-              <el-text
-                :type="statusMap[scope.row.status]"
-                @click="scope.row.visible = true"
-                style="cursor: pointer"
-                >{{ scope.row.statusDescription }}</el-text
+              <el-button
+                type="primary"
+                size="small"
+                @click.stop="scope.row.visible = true"
+                >沟通</el-button
               >
             </template>
             <div style="font-size: 12px; margin-bottom: 10px">确认沟通</div>
@@ -56,19 +79,6 @@
               >确定</el-button
             >
           </el-popover>
-          <el-text v-else :type="statusMap[scope.row.status]">{{
-            scope.row.statusDescription
-          }}</el-text>
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template v-slot="scope">
-          <FromatDate :time="scope.row.createTime" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="modifyTime" label="修改时间">
-        <template v-slot="scope">
-          <FromatDate :time="scope.row.createTime" />
         </template>
       </el-table-column>
     </el-table>
@@ -94,6 +104,7 @@ import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
 import { ElMessage } from "element-plus";
 
 useTableHeight(); // 动态修改表格高度
+const loading = ref(false);
 const tableData = ref([]);
 const statusOptions = [
   { value: "", label: "全部" },
@@ -118,15 +129,21 @@ const pageParams = reactive({
 
 // 列表请求
 const getData = async () => {
-  const res = await communication({
-    ...pageParams,
-    condition: {
-      ...filterForm,
-    },
-  });
-  const { body } = res;
-  total.value = body.totalCount;
-  tableData.value = body.pageItems;
+  loading.value = true;
+  try {
+    const res = await communication({
+      ...pageParams,
+      condition: {
+        ...filterForm,
+      },
+    });
+    loading.value = false;
+    const { body } = res;
+    total.value = body.totalCount;
+    tableData.value = body.pageItems;
+  } catch (error) {
+    loading.value = false;
+  }
 };
 // 初始化列表数据
 getData();

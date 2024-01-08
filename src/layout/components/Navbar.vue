@@ -21,7 +21,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <router-link to="/">
-              <el-dropdown-item> Home </el-dropdown-item>
+              <el-dropdown-item> 首页 </el-dropdown-item>
             </router-link>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">退出登录</span>
