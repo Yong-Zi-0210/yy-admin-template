@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="filter">
+    <div class="header">
       <el-form :model="filterForm">
         <el-form-item label="状态">
           <el-select v-model="filterForm.status">
@@ -158,6 +158,7 @@ const handleUpdate = async (row: any) => {
   try {
     await update({ id: row.id });
     row.visible = false;
+    search();
     ElMessage.success("修改成功");
   } catch (error) {}
 };
@@ -179,7 +180,7 @@ const reset = () => {
 };
 </script>
 <style lang="scss" scoped>
-.filter {
+.header {
   display: flex;
   justify-content: flex-end;
   .filter-oper {
@@ -190,4 +191,3 @@ const reset = () => {
   margin-top: 20px;
 }
 </style>
-@/hooks/useTableHeight@/hooks/useRouteListener
