@@ -7,7 +7,7 @@ const setHeight = () => {
     document.body.clientHeight;
   const navBarHeight =
     document.querySelector(".navigation-bar")?.clientHeight || 0;
-  const headerHeight = document.querySelector(".header")?.clientHeight || 0;
+  const headerHeight = document.querySelector(".filter")?.clientHeight || 0;
   return bodyHeight - navBarHeight - headerHeight - 82;
 };
 window.onresize = () => {

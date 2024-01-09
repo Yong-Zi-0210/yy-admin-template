@@ -15,7 +15,7 @@ export function upload(data: object) {
 // 删除图片
 export function remove(data: object) {
   return request<ApiResponseData<any>>({
-    url: "/usedCar/removeImage",
+    url: "/image/removeImage",
     method: "post",
     data,
   });
@@ -24,14 +24,14 @@ export function remove(data: object) {
 // 图片分类
 export function imageCategories() {
   return request<ApiResponseData<any>>({
-    url: "/usedCar/getImageCategories",
+    url: "/image/getImageCategories",
     method: "post",
   });
 }
 
 export function addCategory(data: object) {
   return request<ApiResponseData<any>>({
-    url: "/usedCar/addImageCategory",
+    url: "/image/addImageCategory",
     method: "post",
     data,
   });
@@ -40,7 +40,7 @@ export function addCategory(data: object) {
 // 获取对应分类的图片数据
 export function images(data: object) {
   return request<ApiResponseData<any>>({
-    url: "/usedCar/getImages",
+    url: "/image/getImages",
     method: "post",
     data,
   });

@@ -62,17 +62,10 @@ export default defineConfig({
         /** 是否允许跨域 */
         changeOrigin: true,
       },
-      // 经销商后台
-      "/cardealer-server": {
-        target: "http://122.51.54.57:8061",
-        ws: true,
-        /** 是否允许跨域 */
-        changeOrigin: true,
-      },
     },
     // /** 预热常用文件，提高初始页面加载速度 */
-    // warmup: {
-    //   clientFiles: ["./src/layouts/**/*.vue"],
-    // },
+    warmup: {
+      clientFiles: ["./src/layouts/**/*.vue"],
+    },
   },
 });

@@ -1,9 +1,12 @@
 <template>
   <div class="app-container">
-    <div class="header">
+    <div class="filter">
       <el-button type="primary" @click="openDialog">新增</el-button>
-      <div class="filter">
+      <div class="filter-oper">
         <el-form :model="filterForm">
+          <el-form-item label="公司名">
+            <CompanySelect v-model:companyName="filterForm.name" />
+          </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="filterForm.status">
               <el-option
@@ -15,24 +18,32 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <div class="filter-oper">
-          <el-button type="primary" @click="search">搜索</el-button>
-          <el-button @click="reset">重置</el-button>
-        </div>
+        <el-button type="primary" @click="search">搜索</el-button>
+        <el-button @click="reset">重置</el-button>
       </div>
     </div>
-
     <el-table
       :data="tableData"
+      :max-height="maxHeight"
       border
       style="width: 100%"
-      :max-height="maxHeight"
       v-loading="loading"
     >
       <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="name" label="名称" width="120" />
-      <el-table-column prop="price" label="价格" width="120" />
-      <el-table-column prop="displayImage" label="显示图片" width="90">
+      <el-table-column prop="weight" label="优先级" width="90" />
+      <el-table-column prop="name" label="公司名" width="180" />
+      <el-table-column prop="address" label="地址" width="180" />
+      <el-table-column prop="financing" label="融资类型" width="120" />
+      <el-table-column prop="employeeNum" label="员工数" width="120" />
+      <el-table-column prop="type" label="公司类型" width="120" />
+      <el-table-column prop="tag" label="标签" width="120">
+        <template v-slot="scope">
+          <Tags :tags="scope.row.tag" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="workTime" label="工作时间" width="180" />
+      <el-table-column prop="welfareTreatment" label="福利待遇" width="180" />
+      <el-table-column prop="displayImage" label="显示图片" width="100">
         <template v-slot="scope">
           <ImagePreview
             v-if="scope.row.displayImage"
@@ -41,27 +52,10 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" width="200" />
-      <el-table-column prop="images" label="图片集" width="80">
+      <el-table-column prop="status" label="状态" width="120">
         <template v-slot="scope">
-          <ImagePreview
-            v-if="scope.row.images[0]"
-            :src="scope.row.images[0]"
-            :preview-src-list="scope.row.images"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column prop="tag" label="标签" width="120">
-        <template v-slot="scope">
-          <Tags :tags="scope.row.tag" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="type" label="车型" />
-      <el-table-column prop="brand" label="品牌" />
-      <el-table-column prop="address" label="状态" width="120">
-        <template v-slot="scope">
-          <el-text :type="statusType[scope.row.status]">{{
-            statusMap[scope.row.status]
+          <el-text :type="statusMap[scope.row.status].type">{{
+            statusMap[scope.row.status].text
           }}</el-text>
         </template>
       </el-table-column>
@@ -72,47 +66,25 @@
       </el-table-column>
       <el-table-column prop="modifyTime" label="修改时间" width="180">
         <template v-slot="scope">
-          <FromatDate :time="scope.row.modifyTime" />
+          <FromatDate :time="scope.row.createTime" />
         </template>
       </el-table-column>
       <el-table-column prop="oper" label="操作" fixed="right" width="180">
         <template v-slot="scope">
           <el-button
-            v-if="scope.row.status === '001'"
             size="small"
             type="warning"
             @click="handleEdit(scope.row.id)"
           >
             编辑
           </el-button>
-          <el-popover
-            placement="top"
-            :width="120"
-            trigger="click"
-            :visible="scope.row.visible"
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleDetail(scope.row.id)"
           >
-            <template #reference>
-              <el-button
-                size="small"
-                @click="scope.row.visible = true"
-                :type="scope.row.status === '002' ? 'danger' : 'primary'"
-              >
-                {{ scope.row.status === "002" ? "下架" : "上架" }}
-              </el-button>
-            </template>
-            <div style="font-size: 12px; margin-bottom: 10px">
-              {{ scope.row.status === "002" ? "确定下架?" : "确定上架?" }}
-            </div>
-            <el-button size="small" @click="scope.row.visible = false"
-              >取消</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleSwitch(scope.row)"
-              >确定</el-button
-            >
-          </el-popover>
+            查看详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -120,7 +92,7 @@
       <el-pagination
         v-model:current-page="pageParams.currentPage"
         v-model:page-size="pageParams.pageSize"
-        :page-sizes="[20, 50, 150, 300]"
+        :page-sizes="[50, 150, 300, 400]"
         background
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -128,56 +100,55 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <AddOrEdit v-model="addOrEditDialog" :id="editId" @refresh="update" />
+    <UnitAddEdit v-model="addOrEditDialog" :id="editId" @refresh="update" />
+    <UnitDetail v-model="detailDialog" :id="editId" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { usedCarList, updateStatus } from "@/api/usedCar";
-import { Condition } from "@/api/usedCar/types";
+import FromatDate from "@/views/components/FromatDate.vue";
+import { unitList } from "@/api/recruitment";
 import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
-import { ElMessage } from "element-plus";
 
+useTableHeight(); // 动态修改表格高度
 const loading = ref(false);
 const addOrEditDialog = ref(false);
+const detailDialog = ref(false);
 const editId = ref("");
 const tableData = ref([]);
-useTableHeight();
 const statusOptions = [
   { value: "", label: "全部" },
-  { value: "001", label: "从未上架" },
-  { value: "002", label: "上架" },
-  { value: "003", label: "下架" },
+  { value: "000", label: "不展示" },
+  { value: "001", label: "展示中" },
 ];
-const statusMap = reactive<any>({
-  "001": "从未上架",
-  "002": "上架",
-  "003": "下架",
-});
-
-const statusType = reactive<any>({
-  "001": "info",
-  "002": "success",
-  "003": "danger",
-});
+const statusMap = {
+  "000": {
+    type: "danger",
+    text: "不展示",
+  },
+  "001": {
+    type: "success",
+    text: "展示中",
+  },
+} as any;
 
 // 过滤字段
-const filterForm = reactive<Condition>({
-  brandId: "",
+const filterForm = reactive({
+  name: "",
   status: "",
 });
 // 分页信息
 const total = ref(0);
 const pageParams = reactive({
   currentPage: 1,
-  pageSize: 20,
+  pageSize: 50,
 });
 
 // 列表请求
 const getData = async () => {
   loading.value = true;
   try {
-    const res = await usedCarList({
+    const res = await unitList({
       ...pageParams,
       condition: {
         ...filterForm,
@@ -196,8 +167,6 @@ getData();
 
 // 搜索
 const search = () => {
-  pageParams.currentPage = 1;
-  pageParams.pageSize = 20;
   getData();
 };
 
@@ -211,16 +180,13 @@ const handleEdit = (id: string) => {
   addOrEditDialog.value = true;
   editId.value = id;
 };
-// 删除
-const handleSwitch = async (row: any) => {
-  row.visible = false;
-  await updateStatus({
-    type: row.status !== "002" ? "002" : "003",
-    id: row.id,
-  });
-  ElMessage.success("操作成功");
-  search();
+
+// 查看详情
+const handleDetail = (id: string) => {
+  detailDialog.value = true;
+  editId.value = id;
 };
+
 // 更新数据
 const update = () => {
   search();
@@ -239,20 +205,22 @@ const handleCurrentChange = (value: number) => {
 };
 // 重置
 const reset = () => {
+  filterForm.name = "";
   filterForm.status = "";
 };
 </script>
 <style lang="scss" scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-}
-
 .filter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   .filter-oper {
-    margin-left: 20px;
+    display: flex;
+  }
+  :deep(.el-form) {
+    display: flex;
+    .el-form-item {
+      margin-right: 50px;
+    }
   }
 }
 .pagination {

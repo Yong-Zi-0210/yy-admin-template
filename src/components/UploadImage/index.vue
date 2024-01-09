@@ -8,7 +8,7 @@
     width="60%"
   >
     <div class="oper-options">
-      <el-select v-model="type" filterable @change="handleChange">
+      <el-select v-model="categoryId" filterable @change="handleChange">
         <el-option
           v-for="item in typeOptions"
           :key="item.id"
@@ -120,7 +120,6 @@ const loading = ref(false);
 const addDialog = ref(false);
 const previewDialog = ref(false);
 const previewImageUrl = ref("");
-const type = ref(1);
 const total = ref(0);
 const categoryId = ref(1);
 const checkList = ref<string[]>([]);
@@ -166,7 +165,7 @@ const addCategory = () => {
 const handleUpload = () => {
   if (!typeOptions.value) {
     return ElMessage.warning("请先新增后再选择类型");
-  } else if (!type.value) {
+  } else if (!categoryId.value) {
     return ElMessage.warning("请先选择类型");
   } else {
     (uploadRef.value as any).$el.click();
@@ -177,8 +176,8 @@ const uploadChange = async (file: UploadFile, files: UploadFiles) => {
   console.log(file, files);
   try {
     await upload({
-      dealerId: userStore.userInfo.dealerId,
-      categoryId: type.value,
+      operatorId: userStore.userInfo.id,
+      categoryId: categoryId.value,
       file: file.raw,
     });
     ElMessage.success("上传成功");
@@ -195,6 +194,7 @@ const close = () => {
 const getImageCategories = async () => {
   try {
     const res = await imageCategories();
+    categoryId.value = res.body[0].id;
     typeOptions.value = res.body;
   } catch (error) {}
 };
@@ -301,6 +301,7 @@ const confirm = () => {
     margin: 0 8px 8px 0;
     border-radius: 6px;
     overflow: hidden;
+    border: 1px solid #f5f7fa;
     .item-status-label {
       position: absolute;
       display: inline-flex;
