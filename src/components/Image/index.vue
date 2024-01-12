@@ -23,7 +23,7 @@ watch(
   () => props.modelValue,
   () => {
     if (typeof props.modelValue === "string") {
-      data.value = [props.modelValue];
+      data.value = props.modelValue ? (data.value = [props.modelValue]) : [];
     } else {
       data.value = props.modelValue;
     }
@@ -35,7 +35,7 @@ const emit = defineEmits(["update:modelValue"]);
 const handleDelete = (index: number) => {
   data.value.splice(index, 1);
   if (typeof props.modelValue === "string") {
-    emit("update:modelValue", data.value[0]);
+    emit("update:modelValue", data.value[0] ? data.value[0] : "");
   } else {
     emit("update:modelValue", data.value);
   }
