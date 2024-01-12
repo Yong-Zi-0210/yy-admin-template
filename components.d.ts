@@ -73,7 +73,7 @@ declare module 'vue' {
     HotJobDetail: typeof import('./src/views/recruitment/hotJob/components/HotJobDetail.vue')['default']
     HotUnit: typeof import('./src/views/recruitment/hotUnit/index.vue')['default']
     HotUnitAddEdit: typeof import('./src/views/recruitment/hotUnit/components/HotUnitAddEdit.vue')['default']
-    Image: typeof import('./src/views/usedCar/carInfo/components/Image.vue')['default']
+    Image: typeof import('./src/components/Image/index.vue')['default']
     ImagePreview: typeof import('./src/views/components/ImagePreview.vue')['default']
     Item: typeof import('./src/layout/components/Sidebar/Item.vue')['default']
     Job: typeof import('./src/views/recruitment/job/index.vue')['default']

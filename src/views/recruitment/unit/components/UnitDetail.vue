@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { detail } from "@/api/recruitment";
 import { FormInstance } from "element-plus";
-
 interface Props {
   modelValue: boolean;
   id?: string | number;
@@ -139,12 +138,10 @@ const getDetail = async () => {
             </el-col>
           </el-row>
           <el-form-item label="显示图片" prop="displayImage">
-            <Image
-              :list="baseForm.displayImage !== '' && [baseForm.displayImage]"
-            />
+            <Image v-model="baseForm.displayImage" :isDelete="false" />
           </el-form-item>
           <el-form-item label="图片集" prop="images">
-            <Image :list="baseForm.images" />
+            <Image v-model="baseForm.images" :isDelete="false" />
           </el-form-item>
           <el-form-item label="公司简介" prop="profile">
             <span>{{ baseForm.profile }}</span>

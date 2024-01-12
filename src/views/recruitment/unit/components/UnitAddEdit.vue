@@ -84,7 +84,7 @@ const uploadImage = (value: number) => {
   if (value === 1) {
     limit.value = true;
     uploadLimitLength.value = 1;
-    defaultChcek.value = baseForm.displayImage.length
+    defaultChcek.value = baseForm.displayImage?.length
       ? [baseForm.displayImage]
       : [];
   } else {
@@ -247,20 +247,17 @@ const confirm = () => {
             </el-col>
           </el-row>
           <el-form-item label="显示图片" prop="displayImage">
-            <Image
-              :list="baseForm.displayImage !== '' && [baseForm.displayImage]"
-            />
+            <Image v-model="baseForm.displayImage" />
             <el-button type="primary" @click="uploadImage(1)"
               >选择图片</el-button
             >
           </el-form-item>
           <el-form-item label="图片集" prop="images">
-            <Image :list="baseForm.images" />
+            <Image v-model="baseForm.images" />
             <el-button type="primary" @click="uploadImage(2)"
               >选择图片</el-button
             >
           </el-form-item>
-
           <el-form-item label="公司简介" prop="profile">
             <el-input
               type="textarea"

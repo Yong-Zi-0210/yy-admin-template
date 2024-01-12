@@ -3,7 +3,7 @@ import {
   createRouter,
   createWebHashHistory,
 } from "vue-router";
-import usedCar from "./usedCar";
+// import usedCar from "./usedCar";
 import recruitment from "./recruitment";
 
 const Layout = () => import("@/layout/index.vue");
