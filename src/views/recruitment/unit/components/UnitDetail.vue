@@ -40,7 +40,7 @@ const statusText = computed(() => {
   if (baseForm.status === "000") {
     return "不展示";
   } else {
-    return "展示中";
+    return "展示";
   }
 });
 /** 打开 */

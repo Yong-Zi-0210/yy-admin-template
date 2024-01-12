@@ -42,12 +42,13 @@ const baseForm = reactive<AnyObject>({
   images: [], // 图片集
   companyDetails: "", // 公司详情
   industryInformation: "", // 行业信息
+  weight: "", // 优先级
 });
 
 const status = ref("");
 const statusOptions = [
   { value: "000", label: "不展示" },
-  { value: "001", label: "展示中" },
+  { value: "001", label: "展示" },
 ];
 const operType = computed(() => (!props.id ? "add" : "edit"));
 const title = computed(() => (props.id ? "修改信息" : "新增"));
@@ -104,7 +105,6 @@ const handleSelect = (data: string[]) => {
     arr = [...new Set(arr)];
     baseForm[ImageTypes[imageTypes.value]] = arr;
   }
-  console.log(baseForm[ImageTypes[imageTypes.value]]);
 };
 
 // 处理回显数据
@@ -193,7 +193,7 @@ const confirm = () => {
               <el-form-item label="标签" prop="tag">
                 <el-input
                   v-model="baseForm.tag"
-                  placeholder="多个标签用｜隔开"
+                  placeholder="多个标签用｜线隔开"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -219,10 +219,20 @@ const confirm = () => {
               <el-form-item label="福利待遇" prop="welfareTreatment">
                 <el-input
                   v-model="baseForm.welfareTreatment"
-                  placeholder="福利待遇"
+                  placeholder="多种福利用｜线隔开"
                 ></el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="优先级" prop="weight">
+                <el-input
+                  v-model="baseForm.weight"
+                  placeholder="优先级"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
             <el-col :span="8" v-if="operType === 'edit'">
               <el-form-item label="状态">
                 <el-select v-model="status">

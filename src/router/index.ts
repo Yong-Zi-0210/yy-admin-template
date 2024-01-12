@@ -36,7 +36,7 @@ const routers: RouteRecordRaw[] = [
       },
     ],
   },
-  ...usedCar,
+  // ...usedCar,
   ...recruitment,
   {
     path: "/404",

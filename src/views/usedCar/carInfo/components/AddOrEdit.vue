@@ -109,7 +109,6 @@ const handleSelect = (data: string[]) => {
     arr = [...new Set(arr)];
     baseForm[ImageTypes[imageTypes.value]] = arr;
   }
-  console.log(baseForm[ImageTypes[imageTypes.value]]);
 };
 
 // 处理回显数据

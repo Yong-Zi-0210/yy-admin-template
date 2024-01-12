@@ -38,13 +38,13 @@ watch(
 );
 
 // 请求品牌列表数据
-const getBrands = async () => {
+const getList = async () => {
   try {
     const res = await allUnitList();
     companyOptions.value = res.body;
   } catch (error) {}
 };
-getBrands();
+getList();
 
 const change = (index: number) => {
   emit("update:companyId", companyOptions.value[index]?.id);

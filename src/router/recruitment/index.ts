@@ -11,7 +11,7 @@ export default [
         component: () => import("@/views/recruitment/unit/index.vue"),
         name: "Unit",
         meta: {
-          title: "单位",
+          title: "企业",
           svgIcon: "unit",
         },
       },
@@ -22,6 +22,33 @@ export default [
         meta: {
           title: "岗位",
           svgIcon: "job",
+        },
+      },
+      {
+        path: "hotUnit",
+        component: () => import("@/views/recruitment/hotUnit/index.vue"),
+        name: "HotUnit",
+        meta: {
+          title: "热门企业",
+          svgIcon: "hot-unit",
+        },
+      },
+      {
+        path: "hotJob",
+        component: () => import("@/views/recruitment/hotJob/index.vue"),
+        name: "HotJob",
+        meta: {
+          title: "热招岗位",
+          svgIcon: "hot-job",
+        },
+      },
+      {
+        path: "hotJobCate",
+        component: () => import("@/views/recruitment/hotJobCategory/index.vue"),
+        name: "HotJobCate",
+        meta: {
+          title: "热招岗位分类",
+          svgIcon: "category",
         },
       },
       {

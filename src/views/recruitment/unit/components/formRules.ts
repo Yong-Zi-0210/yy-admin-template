@@ -28,6 +28,7 @@ export default () => {
     industryInformation: [
       { required: true, trigger: "change", message: "请输入行业信息" },
     ],
+    weight: [{ required: true, trigger: "change", message: "请输入优先级" }],
   });
   return rules;
 };

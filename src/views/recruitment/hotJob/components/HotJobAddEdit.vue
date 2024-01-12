@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { addJob, editJob, jobDetail } from "@/api/recruitment";
+import { addHotJob, editHotJob } from "@/api/recruitment";
 import { ElMessage, FormInstance } from "element-plus";
 import useRules from "./formRules";
+import JobCategorySelect from "@/views/components/JobCategorySelect.vue";
+import JobSelect from "@/views/components/JobSelect.vue";
 
 interface Props {
   modelValue: boolean;
-  id?: string | number;
+  data?: AnyObject;
 }
 interface AnyObject {
   [key: string]: any;
@@ -14,24 +16,28 @@ const baseFormRef = ref<FormInstance>();
 const emit = defineEmits(["update:modelValue", "refresh"]);
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-  id: "",
+  data: () => {
+    return {};
+  },
 });
 
 // 基本信息字段
 const rules = useRules();
 const jobForm = reactive<AnyObject>({
-  companyId: "", // 公司Id
-  companyName: "", // 公司名称
-  companyType: "", // 公司类型
+  categoryId: "", // 分类id
+  categoryName: "", // 分类名称
+  positionId: "", // 职位id
+  name: "", // 职位名称
+  salary: "", // 薪资
   city: "", // 所在城市
-  keywords: "", // 关键字
-  address: "", // 地址
   workingAge: "", // 工龄
   education: "", // 学历
-  workDetails: "", // 工作详情
-  url: "", // 跳转链接
+  keywords: "", // 关键字
+  companyId: "", // 公司id
+  companyName: "", // 公司名称
+  companyType: "", // 公司类型
+  financing: "", // 融资类型
   weight: "", // 优先级
-  salary: "",
 });
 
 const status = ref("");
@@ -39,15 +45,14 @@ const statusOptions = [
   { value: "000", label: "不展示" },
   { value: "001", label: "展示" },
 ];
-const operType = computed(() => (!props.id ? "add" : "edit"));
-const title = computed(() => (props.id ? "修改信息" : "新增"));
+const operType = computed(() => (!props.data ? "add" : "edit"));
+const title = computed(() => (props.data ? "修改信息" : "新增"));
 /** 打开 */
 const open = () => {
   nextTick(() => {
     baseFormRef.value?.resetFields();
-    if (props.id) {
-      getDetail();
-    } else {
+    if (props.data) {
+      initFormFields(props.data);
     }
   });
 };
@@ -58,13 +63,13 @@ const close = () => {
 
 // 新增
 const add = async (data: object) => {
-  await addJob(data);
+  await addHotJob(data);
   ElMessage.success("新增成功");
 };
 
 // 编辑
 const edit = async (data: object) => {
-  await editJob(data);
+  await editHotJob(data);
   ElMessage.success("修改成功");
 };
 
@@ -78,19 +83,13 @@ const initFormFields = (detail: any) => {
   }
 };
 
-// 获取详情
-const getDetail = async () => {
-  const res = await jobDetail({ id: props.id });
-  initFormFields(res.body);
-};
-
 /** 确认 */
 const confirm = () => {
   baseFormRef.value?.validate(async (validate) => {
     if (validate) {
       operType.value === "add"
         ? await add({ ...jobForm })
-        : await edit({ ...jobForm, id: props.id, status: status.value });
+        : await edit({ ...jobForm, id: props.data.id, status: status.value });
       emit("update:modelValue", false);
       emit("refresh");
     }
@@ -117,53 +116,46 @@ const confirm = () => {
         >
           <el-row :gutter="24">
             <el-col :span="8">
-              <el-form-item label="公司名称" prop="companyName">
-                <CompanySelect
-                  v-model:companyId="jobForm.companyId"
-                  v-model:companyName="jobForm.companyName"
+              <el-form-item label="分类名称" prop="categoryId">
+                <JobCategorySelect
+                  v-model:category-id="jobForm.categoryId"
+                  v-model:category-name="jobForm.categoryName"
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="公司类型" prop="companyType">
-                <el-input
-                  v-model="jobForm.companyType"
-                  placeholder="公司类型"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="所在城市" prop="city">
-                <el-input v-model="jobForm.city" placeholder="所在城市" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
             <el-col :span="8">
               <el-form-item label="关键字" prop="keywords">
-                <el-input v-model="jobForm.keywords" placeholder="关键字" />
+                <el-input
+                  v-model="jobForm.keywords"
+                  placeholder="关键字"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="岗位名称" prop="name">
-                <el-input v-model="jobForm.name" placeholder="岗位名称" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="地址" prop="address">
-                <el-input v-model="jobForm.address" placeholder="地址" />
+              <el-form-item label="薪资" prop="salary">
+                <el-input
+                  v-model="jobForm.salary"
+                  placeholder="薪资"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="24">
+            <el-col :span="8">
+              <el-form-item label="所在城市" prop="city">
+                <el-input
+                  v-model="jobForm.city"
+                  placeholder="所在城市"
+                ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="8">
               <el-form-item label="工龄" prop="workingAge">
                 <el-input
                   v-model="jobForm.workingAge"
                   placeholder="工龄"
-                ></el-input>
-              </el-form-item>
-            </el-col>
+                ></el-input> </el-form-item
+            ></el-col>
             <el-col :span="8">
               <el-form-item label="学历" prop="education">
                 <el-input
@@ -172,24 +164,50 @@ const confirm = () => {
                 ></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="24">
             <el-col :span="8">
-              <el-form-item label="跳转链接" prop="url">
-                <el-input v-model="jobForm.url" placeholder="跳转链接" />
+              <el-form-item label="公司名称" prop="companyName">
+                <CompanySelect
+                  v-model:companyId="jobForm.companyId"
+                  v-model:companyName="jobForm.companyName"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="职位名称" prop="positionId">
+                <JobSelect
+                  v-model:position-id="jobForm.positionId"
+                  v-model:position-name="jobForm.name"
+                  :company-id="jobForm.companyId"
+                  :disabled="!jobForm.companyId"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="公司类型" prop="companyType">
+                <el-input
+                  v-model="jobForm.companyType"
+                  placeholder="公司类型"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="24">
             <el-col :span="8">
-              <el-form-item label="优先级" prop="weight">
+              <el-form-item label="融资类型" prop="financing">
                 <el-input
-                  v-model="jobForm.weight"
-                  placeholder="跳转优先级链接"
-                />
+                  v-model="jobForm.financing"
+                  placeholder="融资类型"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="薪资" prop="salary">
-                <el-input v-model="jobForm.salary" placeholder="薪资" />
+              <el-form-item label="优先级" prop="weight">
+                <el-input
+                  v-model="jobForm.weight"
+                  placeholder="优先级"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8" v-if="operType === 'edit'">
@@ -205,9 +223,6 @@ const confirm = () => {
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="工作详情" prop="workDetails">
-            <Wangeditor v-model="jobForm.workDetails" />
-          </el-form-item>
         </el-form>
       </template>
       <template #footer>

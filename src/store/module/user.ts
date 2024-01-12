@@ -31,7 +31,6 @@ const useUserStore = defineStore("user", () => {
     const { body } = await loginApi({ ...loginData });
     userInfo.value = body.operator;
     setUserInfo(body.operator);
-    console.log(userInfo);
     const loginToken = body.loginToken;
     token && setToken(loginToken);
     token.value = loginToken;

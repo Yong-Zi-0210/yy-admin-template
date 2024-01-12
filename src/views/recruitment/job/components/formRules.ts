@@ -18,6 +18,7 @@ export default () => {
     workDetails: [
       { required: true, trigger: "change", message: "请输入工作详情" },
     ],
+    salary: [{ required: true, trigger: "change", message: "请输入薪资" }],
   });
   return rules;
 };

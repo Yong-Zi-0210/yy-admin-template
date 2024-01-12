@@ -42,7 +42,6 @@ const appStore = useAppStore();
 const userStore = useUserStore();
 const { sidebar } = storeToRefs(appStore);
 const { userInfo } = storeToRefs(userStore);
-console.log(userInfo);
 const toggleSideBar = () => {
   appStore.toggleSidebar(false);
 };

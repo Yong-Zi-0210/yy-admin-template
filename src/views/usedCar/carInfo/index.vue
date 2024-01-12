@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="header">
+    <div class="filter">
       <el-button type="primary" @click="openDialog">新增</el-button>
-      <div class="filter">
+      <div class="form-conetnt">
         <el-form :model="filterForm">
           <el-form-item label="状态">
             <el-select v-model="filterForm.status">
@@ -243,16 +243,24 @@ const reset = () => {
 };
 </script>
 <style lang="scss" scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-}
-
 .filter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  .form-conetnt {
+    display: flex;
+  }
   .filter-oper {
     margin-left: 20px;
+  }
+  :deep(.el-form) {
+    display: flex;
+    align-items: center;
+    .el-form-item {
+      margin-bottom: 0;
+      margin-right: 24px;
+    }
   }
 }
 .pagination {

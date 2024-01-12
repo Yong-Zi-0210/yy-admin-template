@@ -172,8 +172,7 @@ const handleUpload = () => {
   }
 };
 const userStore = useUserStore();
-const uploadChange = async (file: UploadFile, files: UploadFiles) => {
-  console.log(file, files);
+const uploadChange = async (file: UploadFile, _files: UploadFiles) => {
   try {
     await upload({
       operatorId: userStore.userInfo.id,

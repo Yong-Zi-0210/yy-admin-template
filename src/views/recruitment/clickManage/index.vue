@@ -103,7 +103,6 @@ const getData = async () => {
 
     total.value = body.totalCount;
     tableData.value = body.pageItems;
-    console.log(tableData.value);
   } catch (error) {
     loading.value = false;
   }

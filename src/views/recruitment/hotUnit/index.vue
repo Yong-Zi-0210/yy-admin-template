@@ -31,27 +31,10 @@
     >
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="weight" label="优先级" width="90" />
-      <el-table-column prop="name" label="公司名" width="180" />
-      <el-table-column prop="address" label="地址" width="180" />
+      <el-table-column prop="companyName" label="公司名" width="180" />
       <el-table-column prop="financing" label="融资类型" width="120" />
       <el-table-column prop="employeeNum" label="员工数" width="120" />
-      <el-table-column prop="type" label="公司类型" width="120" />
-      <el-table-column prop="tag" label="标签" width="120">
-        <template v-slot="scope">
-          <Tags :tags="scope.row.tag" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="workTime" label="工作时间" width="180" />
-      <el-table-column prop="welfareTreatment" label="福利待遇" width="180" />
-      <el-table-column prop="displayImage" label="显示图片" width="100">
-        <template v-slot="scope">
-          <ImagePreview
-            v-if="scope.row.displayImage"
-            :src="scope.row.displayImage"
-            :previewSrcList="[scope.row.displayImage]"
-          />
-        </template>
-      </el-table-column>
+      <el-table-column prop="companyType" label="公司类型" width="120" />
       <el-table-column prop="status" label="状态" width="120">
         <template v-slot="scope">
           <el-text :type="statusMap[scope.row.status].type">{{
@@ -69,21 +52,10 @@
           <FromatDate :time="scope.row.createTime" />
         </template>
       </el-table-column>
-      <el-table-column prop="oper" label="操作" fixed="right" width="180">
+      <el-table-column prop="oper" label="操作" fixed="right" width="100">
         <template v-slot="scope">
-          <el-button
-            size="small"
-            type="warning"
-            @click="handleEdit(scope.row.id)"
-          >
+          <el-button size="small" type="warning" @click="handleEdit(scope.row)">
             编辑
-          </el-button>
-          <el-button
-            size="small"
-            type="primary"
-            @click="handleDetail(scope.row.id)"
-          >
-            查看详情
           </el-button>
         </template>
       </el-table-column>
@@ -100,21 +72,23 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <UnitAddEdit v-model="addOrEditDialog" :id="editId" @refresh="update" />
-    <UnitDetail v-model="detailDialog" :id="editId" />
+    <HotUnitAddEdit
+      v-model="addOrEditDialog"
+      :data="detailData"
+      @refresh="update"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import FromatDate from "@/views/components/FromatDate.vue";
-import { unitList } from "@/api/recruitment";
+import { hotUnitList } from "@/api/recruitment";
 import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
 
 useTableHeight(); // 动态修改表格高度
 const loading = ref(false);
 const addOrEditDialog = ref(false);
-const detailDialog = ref(false);
-const editId = ref("");
+const detailData = ref({});
 const tableData = ref([]);
 const statusOptions = [
   { value: "", label: "全部" },
@@ -148,7 +122,7 @@ const pageParams = reactive({
 const getData = async () => {
   loading.value = true;
   try {
-    const res = await unitList({
+    const res = await hotUnitList({
       ...pageParams,
       condition: {
         ...filterForm,
@@ -172,19 +146,13 @@ const search = () => {
 
 // 新增
 const openDialog = () => {
-  editId.value = "";
+  detailData.value = "";
   addOrEditDialog.value = true;
 };
 // 编辑
-const handleEdit = (id: string) => {
+const handleEdit = (row: string) => {
   addOrEditDialog.value = true;
-  editId.value = id;
-};
-
-// 查看详情
-const handleDetail = (id: string) => {
-  detailDialog.value = true;
-  editId.value = id;
+  detailData.value = row;
 };
 
 // 更新数据
