@@ -62,7 +62,7 @@ declare module 'vue' {
     FromatDate: typeof import('./src/views/components/FromatDate.vue')['default']
     Hamburger: typeof import('./src/components/Hamburger/index.vue')['default']
     Home: typeof import('./src/views/home/index.vue')['default']
-    Image: typeof import('./src/views/usedCar/carInfo/components/Image.vue')['default']
+    Image: typeof import('./src/components/Image/index.vue')['default']
     ImagePreview: typeof import('./src/views/components/ImagePreview.vue')['default']
     Item: typeof import('./src/layout/components/Sidebar/Item.vue')['default']
     Layout: typeof import('./src/layout/index.vue')['default']
