@@ -3,8 +3,9 @@ import {
   createRouter,
   createWebHashHistory,
 } from "vue-router";
-// import usedCar from "./usedCar";
+import usedCar from "./usedCar";
 import recruitment from "./recruitment";
+import goods from "./goods";
 
 const Layout = () => import("@/layout/index.vue");
 export const constantRoutes: RouteRecordRaw[] = [];
@@ -36,8 +37,9 @@ const routers: RouteRecordRaw[] = [
       },
     ],
   },
-  // ...usedCar,
+  ...usedCar,
   ...recruitment,
+  ...goods,
   {
     path: "/404",
     component: () => import("@/views/error-page/404.vue"),

@@ -9,5 +9,6 @@ declare module "*.vue" {
 }
 
 declare module "element-plus/dist/locale/zh-cn.mjs";
+declare module "@wangeditor/editor-for-vue";
 // declare module "path-browserify";
 // declare module "path-to-regexp";

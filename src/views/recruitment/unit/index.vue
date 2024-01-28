@@ -167,6 +167,8 @@ getData();
 
 // 搜索
 const search = () => {
+  pageParams.pageSize = 50;
+  pageParams.currentPage = 1;
   getData();
 };
 

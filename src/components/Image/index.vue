@@ -27,6 +27,9 @@ watch(
     } else {
       data.value = props.modelValue;
     }
+  },
+  {
+    immediate: true,
   }
 );
 

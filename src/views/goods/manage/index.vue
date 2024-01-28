@@ -1,9 +1,20 @@
 <template>
   <div class="app-container">
     <div class="filter">
-      <el-button type="primary" @click="openDialog">新增</el-button>
       <div class="form-content">
         <el-form :model="filterForm">
+          <el-form-item label="分类">
+            <GoodsCategorySelect v-model:categoryId="filterForm.categoryId" />
+          </el-form-item>
+          <el-form-item label="品牌">
+            <GoodsBrandSelect
+              v-model:brandId="filterForm.brandId"
+              :categoryId="filterForm.categoryId"
+            />
+          </el-form-item>
+          <el-form-item label="商品名称">
+            <el-input v-model="filterForm.goodsName" placeholder="商品名称" />
+          </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="filterForm.status">
               <el-option
@@ -15,7 +26,10 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <div class="filter-oper">
+      </div>
+      <div class="filter-oper">
+        <el-button type="primary" @click="openDialog">新增</el-button>
+        <div class="search">
           <el-button type="primary" @click="search">搜索</el-button>
           <el-button @click="reset">重置</el-button>
         </div>
@@ -29,21 +43,32 @@
       v-loading="loading"
     >
       <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="name" label="分类名称" />
-      <el-table-column prop="status" label="状态" width="120">
+      <el-table-column prop="categoryName" label="分类名称" width="120" />
+      <el-table-column prop="brandName" label="品牌名称" width="120" />
+      <el-table-column prop="goodsName" label="商品名称" width="120" />
+      <el-table-column prop="goodsTitle" label="商品标题" width="200" />
+      <el-table-column prop="displayImage" label="显示图片" width="120">
         <template v-slot="scope">
-          <el-text :type="statusMap[scope.row.status].type">{{
-            statusMap[scope.row.status].text
-          }}</el-text>
+          <ImagePreview
+            v-if="scope.row.displayImage"
+            :src="scope.row.displayImage"
+            :previewSrcList="[scope.row.displayImage]"
+          />
         </template>
       </el-table-column>
-      <el-table-column prop="weight" label="优先级" />
-      <el-table-column prop="createTime" label="创建时间">
+      <el-table-column prop="points" label="积分" />
+      <el-table-column prop="price" label="参考价" />
+      <el-table-column prop="status" label="状态">
+        <template v-slot="scope">
+          <span>{{ statusMap[scope.row.status] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="160">
         <template v-slot="scope">
           <FromatDate :time="scope.row.createTime" />
         </template>
       </el-table-column>
-      <el-table-column prop="modifyTime" label="修改时间">
+      <el-table-column prop="modifyTime" label="修改时间" width="160">
         <template v-slot="scope">
           <FromatDate :time="scope.row.createTime" />
         </template>
@@ -68,43 +93,42 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <CategoryAddEdit
-      v-model="addOrEditDialog"
-      :data="detailData"
-      @refresh="update"
-    />
+    <GoodsAddEdit v-model="addOrEditDialog" :id="detailId" @refresh="update" />
   </div>
 </template>
 
 <script setup lang="ts">
 import FromatDate from "@/views/components/FromatDate.vue";
-import { hotJobCategoty } from "@/api/recruitment";
+import { goodsList } from "@/api/goods";
 import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
 
 useTableHeight(); // 动态修改表格高度
 const loading = ref(false);
 const addOrEditDialog = ref(false);
 const tableData = ref([]);
-const detailData = ref({});
+const detailId = ref("");
 
 const statusOptions = [
   { value: "", label: "全部" },
-  { value: "000", label: "不展示" },
-  { value: "001", label: "展示" },
+  { value: "001", label: "未上架" },
+  { value: "002", label: "上架" },
+  { value: "003", label: "下架" },
+  { value: "004", label: "删除" },
+  { value: "005", label: "售罄" },
 ];
 const statusMap = {
-  "000": {
-    type: "danger",
-    text: "不展示",
-  },
-  "001": {
-    type: "success",
-    text: "展示",
-  },
+  "001": "未上架",
+  "002": "上架",
+  "003": "下架",
+  "004": "删除",
+  "005": "售罄",
 } as any;
 // 过滤字段
 const filterForm = reactive({
   status: "", // 状态
+  categoryId: "", // 分类id
+  brandId: "", // 商品品牌id
+  goodsName: "", // 商品名称
 });
 // 分页信息
 const total = ref(0);
@@ -117,7 +141,7 @@ const pageParams = reactive({
 const getData = async () => {
   loading.value = true;
   try {
-    const res = await hotJobCategoty({
+    const res = await goodsList({
       ...pageParams,
       condition: {
         ...filterForm,
@@ -156,15 +180,15 @@ const handleCurrentChange = (value: number) => {
 
 // 新增
 const openDialog = () => {
-  detailData.value = "";
+  detailId.value = "";
   addOrEditDialog.value = true;
 };
 
 // 更新数据
 // 编辑
-const handleEdit = (row: string) => {
+const handleEdit = (row: any) => {
   addOrEditDialog.value = true;
-  detailData.value = row;
+  detailId.value = row.id;
 };
 const update = () => {
   search();
@@ -173,16 +197,18 @@ const update = () => {
 // 重置
 const reset = () => {
   filterForm.status = "";
+  filterForm.categoryId = "";
+  filterForm.brandId = "";
+  filterForm.goodsName = "";
 };
 </script>
 <style lang="scss" scoped>
 .filter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding-bottom: 15px;
   .form-content {
     display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
   }
   :deep(.el-form) {
     display: flex;
@@ -190,8 +216,16 @@ const reset = () => {
     .el-form-item {
       margin-bottom: 0;
       margin-right: 24px;
+      &:last-of-type {
+        margin-right: 0;
+      }
     }
   }
+}
+.filter-oper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 .pagination {
   margin-top: 20px;

@@ -17,7 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, shallowRef, watch } from "vue";
+import { onBeforeUnmount, shallowRef, watch } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(["update:modelValue"]);
 
-const handleCreated = (editor) => {
+const handleCreated = (editor: any) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
 

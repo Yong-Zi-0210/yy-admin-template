@@ -183,7 +183,7 @@ const confirm = () => {
           <el-row :gutter="24">
             <el-col :span="8">
               <el-form-item label="品牌" prop="brandId">
-                <BrandSelect
+                <UsedCarBrandSelect
                   v-model:brandId="baseForm.brandId"
                   v-model:brand="baseForm.brand"
                 />
