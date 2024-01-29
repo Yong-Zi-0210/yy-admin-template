@@ -41,7 +41,6 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" width="200" />
       <el-table-column prop="images" label="图片集" width="80">
         <template v-slot="scope">
           <ImagePreview

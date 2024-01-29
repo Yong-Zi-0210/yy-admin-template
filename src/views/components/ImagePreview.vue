@@ -3,6 +3,7 @@
     style="width: 50px; height: 50px"
     :src="props.src"
     preview-teleported
+    fit="cover"
     :preview-src-list="props.previewSrcList"
   >
     <template #error>
