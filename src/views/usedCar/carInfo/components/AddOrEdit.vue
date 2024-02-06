@@ -12,6 +12,9 @@ enum ImageTypes {
   displayImage = 1, // 显示图片
   images = 2, // 图集
   checkReports = 3, // 检验图集
+  appearances = 4, // 外观
+  interiors = 5, // 内饰
+  chassises = 6, // 发动机
 }
 interface AnyObject {
   [key: string]: any;
@@ -38,6 +41,9 @@ const baseForm = reactive<AnyObject>({
   displayImage: "", // 显示图片
   images: [] as any[], // 图集
   checkReports: [] as any[], // 车检报告图片
+  appearances: [] as any[], // 外观图集
+  interiors: [] as any[], // 内饰图集
+  chassises: [] as any[], // 发动机图集
   description: "", // 描述
   tag: "", // 标签
   type: "", // 车型
@@ -52,6 +58,8 @@ const baseForm = reactive<AnyObject>({
   displacement: "", // 排量
   emissionStandard: "", // 排量标准
   drivingMeans: "", // 驱动
+  downPayment: "", // 首付
+  productionYear: "", // 生产年份
 });
 const operType = computed(() => (!props.id ? "add" : "edit"));
 const title = computed(() => (props.id ? "修改信息" : "新增"));
@@ -257,15 +265,46 @@ const confirm = () => {
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="24">
+            <el-col :span="8">
+              <el-form-item label="生产年份" prop="productionYear">
+                <el-input v-model="baseForm.productionYear"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="首付" prop="downPayment">
+                <el-input v-model="baseForm.downPayment"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-form-item label="图片集" prop="images">
+            <Image v-model="baseForm.images" />
+            <el-button type="primary" @click="uploadImage(2)"
+              >选择图片</el-button
+            >
+          </el-form-item>
           <el-form-item label="车检报告图片" prop="checkReports">
             <Image v-model="baseForm.checkReports" />
             <el-button type="primary" @click="uploadImage(3)"
               >选择图片</el-button
             >
           </el-form-item>
-          <el-form-item label="图片集" prop="images">
-            <Image v-model="baseForm.images" />
-            <el-button type="primary" @click="uploadImage(2)"
+          <el-form-item label="外观图集" prop="appearances">
+            <Image v-model="baseForm.appearances" />
+            <el-button type="primary" @click="uploadImage(4)"
+              >选择图片</el-button
+            >
+          </el-form-item>
+          <el-form-item label="内饰图集" prop="interiors">
+            <Image v-model="baseForm.interiors" />
+            <el-button type="primary" @click="uploadImage(5)"
+              >选择图片</el-button
+            >
+          </el-form-item>
+          <el-form-item label="发动机图集" prop="chassises">
+            <Image v-model="baseForm.chassises" />
+            <el-button type="primary" @click="uploadImage(6)"
               >选择图片</el-button
             >
           </el-form-item>

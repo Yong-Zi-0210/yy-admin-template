@@ -122,7 +122,6 @@ const previewDialog = ref(false);
 const previewImageUrl = ref("");
 const type = ref(1);
 const total = ref(0);
-const categoryId = ref(1);
 const checkList = ref<string[]>([]);
 const typeOptions = ref<TypeItem[]>([]);
 const imagesData = ref<any>([]);
@@ -148,7 +147,7 @@ const init = async () => {
 const resetCheck = async () => {
   pageParams.currentPage = 1;
   pageParams.pageSize = 10;
-  categoryId.value = 1;
+  type.value = 1;
 };
 
 watch(
@@ -204,7 +203,7 @@ const getImages = async () => {
   try {
     const res = await images({
       ...pageParams,
-      condition: { categoryId: categoryId.value },
+      condition: { categoryId: type.value },
     });
     loading.value = false;
     const { body } = res;
@@ -214,10 +213,9 @@ const getImages = async () => {
     loading.value = false;
   }
 };
-const handleChange = (value: number) => {
+const handleChange = () => {
   pageParams.currentPage = 1;
   pageParams.pageSize = 10;
-  categoryId.value = value;
   getImages();
 };
 

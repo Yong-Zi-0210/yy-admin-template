@@ -27,8 +27,9 @@
     >
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="userRealName" label="用户名" width="180" />
-      <el-table-column prop="dealer" label="经销商名称" />
-      <el-table-column prop="carTitle" label="二手车名称" />
+      <el-table-column prop="userContactPhone" label="手机号" width="180" />
+      <el-table-column prop="dealer" label="经销商名称" width="120" />
+      <el-table-column prop="carTitle" label="二手车名称" width="200" />
       <el-table-column prop="statusDescription" label="状态">
         <template v-slot="scope">
           <el-text
@@ -41,6 +42,11 @@
           }}</el-text>
         </template>
       </el-table-column>
+      <el-table-column prop="confirmTime" label="确认时间" width="180">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.confirmTime" />
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
         <template v-slot="scope">
           <FromatDate :time="scope.row.createTime" />
@@ -48,7 +54,7 @@
       </el-table-column>
       <el-table-column prop="modifyTime" label="修改时间" width="180">
         <template v-slot="scope">
-          <FromatDate :time="scope.row.createTime" />
+          <FromatDate :time="scope.row.modifyTime" />
         </template>
       </el-table-column>
       <el-table-column prop="oper" label="操作" width="120">
@@ -65,10 +71,12 @@
                 type="primary"
                 size="small"
                 @click.stop="scope.row.visible = true"
-                >沟通</el-button
+                >获取用户信息</el-button
               >
             </template>
-            <div style="font-size: 12px; margin-bottom: 10px">确认沟通</div>
+            <div style="font-size: 12px; margin-bottom: 10px">
+              确认获取用户信息
+            </div>
             <el-button size="small" @click="scope.row.visible = false"
               >取消</el-button
             >

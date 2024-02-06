@@ -11,6 +11,13 @@ export default () => {
     checkReports: [
       { required: true, trigger: "change", message: "请上传车检报告图集" },
     ],
+    appearances: [
+      { required: true, trigger: "change", message: "请上传外观图集" },
+    ],
+    interiors: [
+      { required: true, trigger: "change", message: "请上传内饰图集" },
+    ],
+    chassises: [{ required: true, trigger: "change", message: "发动机图集" }],
     description: [{ required: true, trigger: "change", message: "请输入描述" }],
     tag: [{ required: true, trigger: "change", message: "请输入标签" }],
     type: [{ required: true, trigger: "change", message: "请输入类型" }],
@@ -32,6 +39,10 @@ export default () => {
     ],
     drivingMeans: [
       { required: true, trigger: "change", message: "请输入驱动" },
+    ],
+    downPayment: [{ required: true, trigger: "change", message: "请输入首付" }],
+    productionYear: [
+      { required: true, trigger: "change", message: "请输入生产年份" },
     ],
   });
   return rules;
