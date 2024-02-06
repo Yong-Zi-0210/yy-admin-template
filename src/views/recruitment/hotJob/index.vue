@@ -5,7 +5,10 @@
       <div class="form-conetnt">
         <el-form :model="filterForm">
           <el-form-item label="岗位分类">
-            <JobCategorySelect v-model="filterForm.categoryId" />
+            <JobCategorySelect
+              v-model:categoryId="filterForm.categoryId"
+              status="001"
+            />
           </el-form-item>
           <el-form-item label="岗位名称">
             <el-input
@@ -43,6 +46,7 @@
       <el-table-column prop="companyType" label="公司类型" width="160" />
       <el-table-column prop="city" label="所在城市" width="120" />
       <el-table-column prop="keywords" label="关键字" width="180" />
+      <el-table-column prop="categoryName" label="岗位分类" width="150" />
       <el-table-column prop="name" label="岗位名称" width="150" />
       <el-table-column prop="workingAge" label="工龄" width="120" />
       <el-table-column prop="education" label="学历" width="120" />
@@ -60,7 +64,7 @@
       </el-table-column>
       <el-table-column prop="modifyTime" label="修改时间" width="180">
         <template v-slot="scope">
-          <FromatDate :time="scope.row.createTime" />
+          <FromatDate :time="scope.row.modifyTime" />
         </template>
       </el-table-column>
       <el-table-column prop="oper" label="操作" fixed="right" width="100">

@@ -2,6 +2,12 @@
   <div class="app-container">
     <div class="filter">
       <el-form :model="filterForm">
+        <el-form-item label="经销商ID">
+          <el-input v-model="filterForm.dealerId"></el-input>
+        </el-form-item>
+        <el-form-item label="二手车ID">
+          <el-input v-model="filterForm.carId"></el-input>
+        </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="filterForm.status">
             <el-option
@@ -25,20 +31,28 @@
       style="width: 100%"
       v-loading="loading"
     >
-      <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="userRealName" label="用户名" width="180" />
-      <el-table-column prop="dealer" label="经销商名称" />
-      <el-table-column prop="carTitle" label="二手车名称" />
-      <el-table-column prop="statusDescription" label="状态">
+      <el-table-column prop="carId" label="车辆ID" width="80" />
+      <el-table-column prop="dealerId" label="经销商ID" width="100" />
+      <el-table-column prop="dealer" label="经销商名称" width="150" />
+      <el-table-column prop="carTitle" label="二手车名称" width="150" />
+      <el-table-column prop="userRealName" label="用户姓名" width="120" />
+      <el-table-column prop="userContactPhone" label="联系电话" width="120" />
+      <el-table-column prop="confirmOperatorId" label="操作员ID" width="100" />
+      <el-table-column prop="status" label="状态">
         <template v-slot="scope">
           <el-text
             v-if="scope.row.status === '001'"
             :type="statusMap[scope.row.status]"
-            >{{ scope.row.statusDescription }}</el-text
+            >{{ statusText[scope.row.status] }}</el-text
           >
           <el-text v-else :type="statusMap[scope.row.status]">{{
-            scope.row.statusDescription
+            statusText[scope.row.status]
           }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column prop="confirmTime" label="商家确认时间" width="180">
+        <template v-slot="scope">
+          <FromatDate :time="scope.row.confirmTime" />
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
@@ -49,36 +63,6 @@
       <el-table-column prop="modifyTime" label="修改时间" width="180">
         <template v-slot="scope">
           <FromatDate :time="scope.row.createTime" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="oper" label="操作" width="120">
-        <template v-slot="scope">
-          <el-popover
-            v-if="scope.row.status === '001'"
-            placement="top"
-            :width="120"
-            trigger="click"
-            :visible="scope.row.visible"
-          >
-            <template #reference>
-              <el-button
-                type="primary"
-                size="small"
-                @click.stop="scope.row.visible = true"
-                >沟通</el-button
-              >
-            </template>
-            <div style="font-size: 12px; margin-bottom: 10px">确认沟通</div>
-            <el-button size="small" @click="scope.row.visible = false"
-              >取消</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleUpdate(scope.row)"
-              >确定</el-button
-            >
-          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -99,9 +83,8 @@
 
 <script setup lang="ts">
 import FromatDate from "@/views/components/FromatDate.vue";
-import { communication, update } from "@/api/communicate";
+import { communication } from "@/api/communicate";
 import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
-import { ElMessage } from "element-plus";
 
 useTableHeight(); // 动态修改表格高度
 const loading = ref(false);
@@ -116,9 +99,16 @@ const statusMap = {
   "090": "success",
 } as any;
 
+const statusText = {
+  "001": "代沟通",
+  "090": "已确认",
+} as any;
+
 // 过滤字段
 const filterForm = reactive({
-  status: "",
+  dealerId: "", // 经销商ID
+  carId: "", // 二手车id
+  status: "", // 状态
 });
 // 分页信息
 const total = ref(0);
@@ -153,15 +143,6 @@ const search = () => {
   getData();
 };
 
-// 确认沟通
-const handleUpdate = async (row: any) => {
-  try {
-    await update({ id: row.id });
-    row.visible = false;
-    ElMessage.success("修改成功");
-  } catch (error) {}
-};
-
 // 修改每页数量
 const handleSizeChange = (value: number) => {
   pageParams.pageSize = value;
@@ -182,6 +163,12 @@ const reset = () => {
 .filter {
   display: flex;
   justify-content: flex-end;
+  :deep(.el-form) {
+    display: flex;
+    .el-form-item {
+      margin-right: 20px;
+    }
+  }
   .filter-oper {
     margin-left: 20px;
   }

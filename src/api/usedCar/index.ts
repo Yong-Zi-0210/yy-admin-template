@@ -1,9 +1,11 @@
 import { request } from "@/utils/request";
 import { ApiResponseData } from "@/utils/request/types";
 import { usedCarRequest } from "./types";
+
+// 二手车列表
 export function usedCarList(data: usedCarRequest) {
   return request<ApiResponseData<any>>({
-    url: "/usedCar/getUsedCars",
+    url: "usedCar/getUsedCars",
     method: "post",
     data,
   });

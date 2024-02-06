@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column prop="modifyTime" label="修改时间" width="180">
         <template v-slot="scope">
-          <FromatDate :time="scope.row.createTime" />
+          <FromatDate :time="scope.row.modifyTime" />
         </template>
       </el-table-column>
       <el-table-column prop="oper" label="操作" fixed="right" width="180">

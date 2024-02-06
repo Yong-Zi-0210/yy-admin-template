@@ -51,6 +51,8 @@ const title = computed(() => (props.data ? "修改信息" : "新增"));
 const open = () => {
   nextTick(() => {
     baseFormRef.value?.resetFields();
+    jobForm.categoryName = "";
+    jobForm.name = "";
     if (props.data) {
       initFormFields(props.data);
     }

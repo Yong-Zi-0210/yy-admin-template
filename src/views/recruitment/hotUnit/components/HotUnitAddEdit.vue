@@ -28,7 +28,7 @@ const baseForm = reactive<AnyObject>({
   companyType: "", // 公司类型
   financing: "", // 融资类型
   employeeNum: "", // 员工人数
-  weight: "", // 优先级
+  weight: 0, // 优先级
 });
 
 const status = ref("");
@@ -75,6 +75,18 @@ const initFormFields = (detail: any) => {
   }
 };
 
+// 选择数据
+const companyChange = (value: any) => {
+  const {
+    type, // 公司类型
+    financing, // 融资类型
+    employeeNum, // 员工人数
+  } = value;
+  baseForm.companyType = type;
+  baseForm.financing = financing;
+  baseForm.employeeNum = employeeNum;
+};
+
 /** 确认 */
 const confirm = () => {
   baseFormRef.value?.validate(async (validate) => {
@@ -112,6 +124,7 @@ const confirm = () => {
                 <CompanySelect
                   v-model:companyName="baseForm.companyName"
                   v-model:companyId="baseForm.companyId"
+                  @handleChange="companyChange"
                 />
               </el-form-item>
             </el-col>

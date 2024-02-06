@@ -27,7 +27,11 @@ interface CompanyItem {
 const companyNameValue = ref("");
 const companyOptions = ref<CompanyItem[]>([]);
 const props = defineProps(["companyId", "companyName"]);
-const emit = defineEmits(["update:companyId", "update:companyName"]);
+const emit = defineEmits([
+  "update:companyId",
+  "update:companyName",
+  "handleChange",
+]);
 
 watch(
   () => props.companyName,
@@ -49,6 +53,7 @@ getList();
 const change = (index: number) => {
   emit("update:companyId", companyOptions.value[index]?.id);
   emit("update:companyName", companyOptions.value[index]?.name);
+  emit("handleChange", companyOptions.value[index]);
 };
 </script>
 <style lang="scss" scoped>

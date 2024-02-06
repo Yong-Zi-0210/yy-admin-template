@@ -9,10 +9,10 @@
     placeholder="请选择公司"
   >
     <el-option
-      v-for="(item, index) in categoryOptions"
+      v-for="item in categoryOptions"
       :key="item.id"
       :label="item.name"
-      :value="index"
+      :value="item.id"
     />
   </el-select>
 </template>
@@ -24,15 +24,25 @@ interface CompanyItem {
   name?: "";
 }
 
-const categoryValue = ref("");
+interface Props {
+  categoryId: number | string;
+  categoryName?: string;
+  status?: string;
+}
+
+const categoryValue = ref<any>("");
 const categoryOptions = ref<CompanyItem[]>([]);
-const props = defineProps(["categoryId", "categoryName"]);
+const props = withDefaults(defineProps<Props>(), {
+  categoryId: 0,
+  categoryName: "",
+  status: "",
+});
 const emit = defineEmits(["update:categoryId", "update:categoryName"]);
 
 watch(
   () => props.categoryId,
   () => {
-    categoryValue.value = props.categoryName;
+    categoryValue.value = props.categoryId;
   },
   { immediate: true }
 );
@@ -44,7 +54,7 @@ const getList = async () => {
       currentPage: 1,
       pageSize: 9999,
       condition: {
-        status: "",
+        status: props.status,
       },
     });
     categoryOptions.value = res.body.pageItems;
@@ -52,9 +62,12 @@ const getList = async () => {
 };
 getList();
 
-const change = (index: number) => {
-  emit("update:categoryId", categoryOptions.value[index]?.id);
-  emit("update:categoryName", categoryOptions.value[index]?.name);
+const change = (value: number) => {
+  const name = categoryOptions.value.find(
+    (item: any) => item.id === value
+  )?.name;
+  emit("update:categoryId", value);
+  emit("update:categoryName", name);
 };
 </script>
 <style lang="scss" scoped>
