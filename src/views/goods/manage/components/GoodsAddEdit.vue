@@ -2,6 +2,7 @@
 import { goodsAdd, goodsEdit, goodsDetail } from "@/api/goods";
 import useRules from "./formRules";
 import { ElMessage, FormInstance } from "element-plus";
+import { combinations } from "@/utils";
 
 interface Props {
   modelValue: boolean;
@@ -181,6 +182,7 @@ const setSkusData = (list: any[]) => {
   });
   return map;
 };
+
 //设置规格参数提交格式
 const setSpecData = (list: any) => {
   const map = {} as any;
@@ -201,9 +203,10 @@ const getSpecsToList = (map: any) => {
       value: map[key],
     });
   }
-  console.log(list);
   return list;
 };
+
+// 格式转化
 const getGoodsSkuTolist = (map: any) => {
   const list = [];
   for (const key in map) {
@@ -223,24 +226,28 @@ const addSpecs = () => {
 // 删除规格参数
 const deleteSpecs = (index: number) => {
   specsList.value.splice(index, 1);
+  handleChange();
 };
 
-// 添加款式
-const addSku = () => {
-  goodsSkusList.value.push({
-    specKey: "", // 组合key
-    stockQuantity: "", // 数量
-    points: "", // 单个积分
-    price: "", // 单个参考价
-    image: "", // 图片
-    barCode: "", // 商品码
-    status: "", // 状态
+// 自动生成款式
+const handleChange = () => {
+  goodsSkusList.value.length = 0;
+  const specValues = specsList.value
+    .map((item) => item.value)
+    .map((item) => item.split(","));
+  const skusKeys = combinations(specValues);
+  skusKeys.forEach((item: any) => {
+    goodsSkusList.value.push({
+      specKey: item.length > 1 ? item.join(",") : item[0], // 组合key
+      stockQuantity: "", // 数量
+      points: "", // 单个积分
+      price: "", // 单个参考价
+      image: "", // 图片
+      barCode: "", // 商品码
+      status: "", // 状态
+      skuId: "", // 组合id
+    });
   });
-};
-
-// 删除款式
-const deteleSku = (index: number) => {
-  goodsSkusList.value.splice(index, 1);
 };
 
 // 获取详情
@@ -397,6 +404,7 @@ const confirm = () => {
                 <el-form-item label="规格名称">
                   <el-input
                     v-model="item.key"
+                    :disabled="operType === 'edit'"
                     placeholder="规格名称"
                   ></el-input>
                 </el-form-item>
@@ -405,17 +413,22 @@ const confirm = () => {
                 <el-form-item label="规格值">
                   <el-input
                     v-model="item.value"
+                    :disabled="operType === 'edit'"
+                    @change="handleChange"
                     placeholder="规格值，多个值请用英文逗号“,”隔开"
                   ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="2" v-if="index > 0">
+              <el-col :span="2" v-if="index > 0 && operType === 'add'">
                 <el-button type="danger" @click="deleteSpecs(index)"
                   >删除</el-button
                 >
               </el-col>
             </el-row>
-            <el-button v-if="baseForm.specType" type="primary" @click="addSpecs"
+            <el-button
+              v-if="baseForm.specType && operType === 'add'"
+              type="primary"
+              @click="addSpecs"
               >添加规格</el-button
             >
           </el-card>
@@ -434,7 +447,8 @@ const confirm = () => {
               <el-form-item label="款式名称">
                 <el-input
                   v-model="item.specKey"
-                  placeholder="从规格值中选取，多种规格组合请用英文逗号“,”隔开"
+                  disabled
+                  placeholder="款式名称"
                 ></el-input>
               </el-form-item>
               <el-row :gutter="24">
@@ -489,14 +503,8 @@ const confirm = () => {
                     >
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="index > 0">
-                  <el-button type="danger" @click="deteleSku(index)"
-                    >删除</el-button
-                  >
-                </el-col>
               </el-row>
             </div>
-            <el-button type="primary" @click="addSku">添加款式</el-button>
           </el-card>
           <el-form-item label="商品标题" prop="goodsTitle">
             <el-input
