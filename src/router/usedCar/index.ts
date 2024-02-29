@@ -24,6 +24,15 @@ export default [
           svgIcon: "communication",
         },
       },
+      {
+        path: "saleCar",
+        component: () => import("@/views/usedCar/saleCar/index.vue"),
+        name: "SaleCar",
+        meta: {
+          title: "用户卖车",
+          svgIcon: "sale",
+        },
+      },
     ],
   },
 ];

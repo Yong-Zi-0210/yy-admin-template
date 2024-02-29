@@ -1,50 +1,59 @@
 <template>
   <div class="app-container">
-    <div class="header">
-      <el-form :model="filterForm">
-        <el-form-item label="状态">
-          <el-select v-model="filterForm.status">
-            <el-option
-              v-for="(item, index) in statusOptions"
-              :key="index"
-              :value="item.value"
-              :label="item.label"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+    <div class="filter">
+      <div class="form-content">
+        <el-form :model="filterForm">
+          <el-form-item label="城市">
+            <el-input v-model="filterForm.city" placeholder="城市" />
+          </el-form-item>
+          <el-form-item label="品牌">
+            <el-input v-model="filterForm.brand" placeholder="品牌" />
+          </el-form-item>
+          <el-form-item label="联系人">
+            <el-input v-model="filterForm.contactName" placeholder="联系人" />
+          </el-form-item>
+          <el-form-item label="联系电话">
+            <el-input
+              v-model="filterForm.contactPhone"
+              placeholder="联系电话"
+            />
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="filterForm.status">
+              <el-option
+                v-for="(item, index) in statusOptions"
+                :key="index"
+                :value="item.value"
+                :label="item.label"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
       <div class="filter-oper">
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button @click="reset">重置</el-button>
       </div>
     </div>
+
     <el-table
       :data="tableData"
-      :max-height="maxHeight"
       border
       style="width: 100%"
+      :max-height="maxHeight"
       v-loading="loading"
     >
       <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="userRealName" label="用户名" width="180" />
-      <el-table-column prop="userContactPhone" label="手机号" width="180" />
-      <el-table-column prop="dealer" label="经销商名称" width="120" />
-      <el-table-column prop="carTitle" label="二手车名称" width="200" />
-      <el-table-column prop="statusDescription" label="状态">
+      <el-table-column prop="city" label="城市" width="120" />
+      <el-table-column prop="brand" label="品牌" width="120" />
+      <el-table-column prop="carName" label="车名" width="120" />
+      <el-table-column prop="contactName" label="联系人" width="120" />
+      <el-table-column prop="contactPhone" label="联系电话" width="120" />
+      <el-table-column prop="status" label="状态">
         <template v-slot="scope">
-          <el-text
-            v-if="scope.row.status === '001'"
-            :type="statusMap[scope.row.status]"
-            >{{ scope.row.statusDescription }}</el-text
-          >
-          <el-text v-else :type="statusMap[scope.row.status]">{{
-            scope.row.statusDescription
+          <el-text :type="statusType[scope.row.status]">{{
+            statusMap[scope.row.status]
           }}</el-text>
-        </template>
-      </el-table-column>
-      <el-table-column prop="confirmTime" label="确认时间" width="180">
-        <template v-slot="scope">
-          <FromatDate :time="scope.row.confirmTime" />
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
@@ -57,7 +66,7 @@
           <FromatDate :time="scope.row.modifyTime" />
         </template>
       </el-table-column>
-      <el-table-column prop="oper" label="操作" width="120">
+      <el-table-column prop="oper" label="操作" fixed="right" width="150">
         <template v-slot="scope">
           <el-popover
             v-if="scope.row.status === '001'"
@@ -71,20 +80,18 @@
                 type="primary"
                 size="small"
                 @click.stop="scope.row.visible = true"
-                >获取用户信息</el-button
+                >确认联系</el-button
               >
             </template>
-            <div style="font-size: 12px; margin-bottom: 10px">
-              确认获取用户信息
-            </div>
+            <div style="font-size: 12px; margin-bottom: 10px">确认已联系？</div>
             <el-button size="small" @click="scope.row.visible = false"
-              >取消</el-button
+              >否</el-button
             >
             <el-button
               size="small"
               type="primary"
-              @click="handleUpdate(scope.row)"
-              >确定</el-button
+              @click="confirmContact(scope.row.id)"
+              >是</el-button
             >
           </el-popover>
         </template>
@@ -106,27 +113,35 @@
 </template>
 
 <script setup lang="ts">
-import FromatDate from "@/views/components/FromatDate.vue";
-import { communication, update } from "@/api/communicate";
+import { saleCarList, confirmContacted } from "@/api/usedCar";
 import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
-import { ElMessage } from "element-plus";
 
-useTableHeight(); // 动态修改表格高度
 const loading = ref(false);
 const tableData = ref([]);
+useTableHeight();
 const statusOptions = [
   { value: "", label: "全部" },
-  { value: "001", label: "待沟通" },
-  { value: "090", label: "已确认" },
+  { value: "001", label: "待联系" },
+  { value: "002", label: "已联系" },
 ];
-const statusMap = {
-  "001": "warning",
-  "090": "success",
-} as any;
+const statusMap = reactive<any>({
+  "001": "待联系",
+  "002": "已联系",
+});
+const statusType = reactive<any>({
+  "001": "info",
+  "002": "success",
+  true: "success",
+  false: "info",
+});
 
 // 过滤字段
 const filterForm = reactive({
-  status: "",
+  city: "", // 城市
+  brand: "", // 品牌
+  contactName: "", // 联系人姓名
+  contactPhone: "", // 联系人电话
+  status: "", // 状态
 });
 // 分页信息
 const total = ref(0);
@@ -139,7 +154,7 @@ const pageParams = reactive({
 const getData = async () => {
   loading.value = true;
   try {
-    const res = await communication({
+    const res = await saleCarList({
       ...pageParams,
       condition: {
         ...filterForm,
@@ -158,18 +173,16 @@ getData();
 
 // 搜索
 const search = () => {
-  pageParams.pageSize = 20;
   pageParams.currentPage = 1;
+  pageParams.pageSize = 20;
   getData();
 };
 
-// 确认沟通
-const handleUpdate = async (row: any) => {
+// 分配经销商
+const confirmContact = async (id: string) => {
   try {
-    await update({ id: row.id });
-    row.visible = false;
+    await confirmContacted({ id });
     getData();
-    ElMessage.success("修改成功");
   } catch (error) {}
 };
 
@@ -186,16 +199,36 @@ const handleCurrentChange = (value: number) => {
 };
 // 重置
 const reset = () => {
-  filterForm.status = "";
+  filterForm.city = ""; // 城市
+  filterForm.brand = ""; // 品牌
+  filterForm.contactName = ""; // 联系人姓名
+  filterForm.contactPhone = ""; // 联系人电话
+  filterForm.status = ""; // 状态
 };
 </script>
 <style lang="scss" scoped>
-.header {
+.filter {
+  padding-bottom: 15px;
+  .form-content {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  :deep(.el-form) {
+    display: flex;
+    align-items: center;
+    .el-form-item {
+      margin-bottom: 10px;
+      margin-right: 24px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}
+.filter-oper {
   display: flex;
   justify-content: flex-end;
-  .filter-oper {
-    margin-left: 20px;
-  }
 }
 .pagination {
   margin-top: 20px;

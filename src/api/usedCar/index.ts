@@ -53,3 +53,21 @@ export function updateStatus(data: object) {
     data,
   });
 }
+
+// 用户卖车列表
+export function saleCarList(data: object) {
+  return request<ApiResponseData<any>>({
+    url: "/usedCar/getSaleCars",
+    method: "post",
+    data,
+  });
+}
+
+// 确认联系用户
+export function confirmContacted(data: object) {
+  return request<ApiResponseData<any>>({
+    url: "/usedCar/confirmSaleCarContacted",
+    method: "post",
+    data,
+  });
+}

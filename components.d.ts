@@ -77,6 +77,8 @@ declare module 'vue' {
     PiturePreview: typeof import('./src/components/PiturePreview/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SaleCar: typeof import('./src/views/usedCar/saleCar/index.vue')['default']
+    SaleCarDialog: typeof import('./src/views/usedCar/saleCar/components/SaleCarDialog.vue')['default']
     ShowPiture: typeof import('./src/views/components/ShowPiture.vue')['default']
     Sidebar: typeof import('./src/layout/components/Sidebar/index.vue')['default']
     SidebarItem: typeof import('./src/layout/components/Sidebar/SidebarItem.vue')['default']
