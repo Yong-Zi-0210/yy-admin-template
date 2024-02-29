@@ -24,6 +24,24 @@ export default [
           svgIcon: "communication",
         },
       },
+      {
+        path: "saleCar",
+        component: () => import("@/views/usedCar/saleCar/index.vue"),
+        name: "SaleCar",
+        meta: {
+          title: "卖车列表",
+          svgIcon: "sale",
+        },
+      },
+      {
+        path: "dealer",
+        component: () => import("@/views/usedCar/dealer/index.vue"),
+        name: "Dealer",
+        meta: {
+          title: "经销商",
+          svgIcon: "dealer",
+        },
+      },
     ],
   },
 ];

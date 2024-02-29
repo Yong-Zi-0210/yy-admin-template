@@ -6,6 +6,7 @@ import {
 import usedCar from "./usedCar";
 import recruitment from "./recruitment";
 import goods from "./goods";
+import recommend from "./recommend";
 
 const Layout = () => import("@/layout/index.vue");
 export const constantRoutes: RouteRecordRaw[] = [];
@@ -37,6 +38,7 @@ const routers: RouteRecordRaw[] = [
       },
     ],
   },
+  ...recommend,
   ...usedCar,
   ...recruitment,
   ...goods,
