@@ -197,7 +197,6 @@ const search = () => {
 const selectDealer = (data: any) => {
   dealerId.value = data.id;
   dealerDialog.value = true;
-  console.log(data);
 };
 
 // 修改每页数量

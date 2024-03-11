@@ -25,6 +25,7 @@ const baseForm = reactive<AnyObject>({
   employeeNum: "", // 员工数
   type: "", // 公司类型
   tag: "", // 标签
+  email: "", // 邮箱
   workTime: "", // 工作时间
   welfareTreatment: "", // 福利待遇
   profile: "", // 公司简介
@@ -136,6 +137,11 @@ const getDetail = async () => {
                 <span>{{ statusText }}</span>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-form-item label="邮箱" prop="email">
+              <span>{{ baseForm.email }}</span>
+            </el-form-item>
           </el-row>
           <el-form-item label="显示图片" prop="displayImage">
             <Image v-model="baseForm.displayImage" :isDelete="false" />

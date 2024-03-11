@@ -43,6 +43,7 @@ const baseForm = reactive<AnyObject>({
   companyDetails: "", // 公司详情
   industryInformation: "", // 行业信息
   weight: "", // 优先级
+  email: "", // 邮箱
 });
 
 const status = ref("");
@@ -243,6 +244,11 @@ const confirm = () => {
                     :label="item.label"
                   ></el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="baseForm.email" placeholder="邮箱" />
               </el-form-item>
             </el-col>
           </el-row>

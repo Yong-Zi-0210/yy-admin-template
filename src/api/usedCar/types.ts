@@ -2,8 +2,7 @@ interface PageItems {
   [key: string]: any;
 }
 export interface Condition {
-  brandId: number | string;
-  status: string;
+  [key: string]: any;
 }
 export interface usedCarResponse {
   currentIndex: number;

@@ -5,3 +5,4 @@ export * from "./hotJob";
 export * from "./click";
 export * from "./hotJobCategoty";
 export * from "./hotUnit";
+export * from "./delivery";

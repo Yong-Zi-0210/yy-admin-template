@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     404: typeof import('./src/views/error-page/404.vue')['default']
     AddCategory: typeof import('./src/components/UploadImage/AddCategory.vue')['default']
+    AddEditRec: typeof import('./src/views/recommend/components/AddEditRec.vue')['default']
     AddOrEdit: typeof import('./src/views/usedCar/carInfo/components/AddOrEdit.vue')['default']
     AddRelation: typeof import('./src/views/goods/category/components/AddRelation.vue')['default']
     App: typeof import('./src/App.vue')['default']
@@ -25,6 +26,7 @@ declare module 'vue' {
     Dealer: typeof import('./src/views/usedCar/dealer/index.vue')['default']
     DealerAddEdit: typeof import('./src/views/usedCar/dealer/components/DealerAddEdit.vue')['default']
     DealerDialog: typeof import('./src/views/usedCar/saleCar/components/DealerDialog.vue')['default']
+    Delivery: typeof import('./src/views/recruitment/delivery/index.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -92,6 +94,7 @@ declare module 'vue' {
     Pie: typeof import('./src/components/Charts/Pie.vue')['default']
     PiturePreview: typeof import('./src/components/PiturePreview/index.vue')['default']
     Recommend: typeof import('./src/views/recommend/index.vue')['default']
+    ResumeDetail: typeof import('./src/views/recruitment/delivery/components/ResumeDetail.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaleCar: typeof import('./src/views/usedCar/saleCar/index.vue')['default']
@@ -106,6 +109,7 @@ declare module 'vue' {
     UnitDetail: typeof import('./src/views/recruitment/unit/components/UnitDetail.vue')['default']
     UploadImage: typeof import('./src/components/UploadImage/index.vue')['default']
     UsedCarBrandSelect: typeof import('./src/views/components/UsedCarBrandSelect.vue')['default']
+    UserManage: typeof import('./src/views/userManage/index.vue')['default']
     Wangeditor: typeof import('./src/components/Wangeditor/index.vue')['default']
   }
   export interface ComponentCustomProperties {

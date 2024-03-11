@@ -7,6 +7,7 @@ import usedCar from "./usedCar";
 import recruitment from "./recruitment";
 import goods from "./goods";
 import recommend from "./recommend";
+import userManage from "./userManage";
 
 const Layout = () => import("@/layout/index.vue");
 export const constantRoutes: RouteRecordRaw[] = [];
@@ -42,6 +43,7 @@ const routers: RouteRecordRaw[] = [
   ...usedCar,
   ...recruitment,
   ...goods,
+  ...userManage,
   {
     path: "/404",
     component: () => import("@/views/error-page/404.vue"),

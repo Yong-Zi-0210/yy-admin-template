@@ -60,6 +60,15 @@ export default [
           svgIcon: "click-manage",
         },
       },
+      {
+        path: "delivery",
+        component: () => import("@/views/recruitment/delivery/index.vue"),
+        name: "Delivery",
+        meta: {
+          title: "简历投递",
+          svgIcon: "resume",
+        },
+      },
     ],
   },
 ];

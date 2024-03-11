@@ -31,7 +31,8 @@ const jobForm = reactive<AnyObject>({
   workDetails: "", // 工作详情
   url: "", // 跳转链接
   weight: "", // 优先级
-  salary: "",
+  salary: "", // 薪资
+  email: "", // 邮箱
 });
 
 const status = ref("");
@@ -192,7 +193,14 @@ const confirm = () => {
                 <el-input v-model="jobForm.salary" placeholder="薪资" />
               </el-form-item>
             </el-col>
-            <el-col :span="8" v-if="operType === 'edit'">
+            <el-col :span="8">
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="jobForm.email" placeholder="邮箱" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="8">
               <el-form-item label="状态">
                 <el-select v-model="status">
                   <el-option
