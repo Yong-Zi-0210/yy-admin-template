@@ -9,16 +9,9 @@
   >
     <div class="oper-options">
       <el-select v-model="type" filterable @change="handleChange">
-        <el-option
-          v-for="item in typeOptions"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        />
+        <el-option v-for="item in typeOptions" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-button type="primary" style="margin-left: 12px" @click="addCategory"
-        >新增分类</el-button
-      >
+      <el-button type="primary" style="margin-left: 12px" @click="addCategory">新增分类</el-button>
       <el-button type="primary" @click="handleUpload">上传图片</el-button>
       <el-upload
         action="#"
@@ -37,23 +30,13 @@
         <SvgIcon name="not-data" />
       </div>
       <ul class="image-list" v-else>
-        <li v-for="item in imagesData" class="image-item">
-          <el-image
-            :src="item.downloadUrl"
-            style="height: 100%"
-            fit="cover"
-          ></el-image>
-          <label
-            v-show="checkList.includes(item.downloadUrl)"
-            class="item-status-label"
-          >
+        <li v-for="item in imagesData" :key="item.downloadUrl" class="image-item">
+          <el-image :src="item.downloadUrl" style="height: 100%" fit="cover"></el-image>
+          <label v-show="checkList.includes(item.downloadUrl)" class="item-status-label">
             <el-icon><Check /></el-icon>
           </label>
           <span class="item-actions">
-            <span
-              class="item-preview"
-              @click="handlePictureCardPreview(item.downloadUrl)"
-            >
+            <span class="item-preview" @click="handlePictureCardPreview(item.downloadUrl)">
               <el-icon><zoom-in /></el-icon>
             </span>
             <span
@@ -95,178 +78,180 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-import { UploadFile, UploadFiles } from "element-plus";
-import useUserStore from "@/store/module/user";
-import { imageCategories, images, upload, remove } from "@/api/file";
-import { ElMessage } from "element-plus";
+import { UploadFile, UploadFiles } from 'element-plus'
+import useUserStore from '@/store/module/user'
+import { imageCategories, images, upload, remove } from '@/api/file'
+import { ElMessage } from 'element-plus'
 
 interface Props {
-  modelValue: boolean;
-  limit?: boolean;
-  limitLength?: number;
-  defaultValue?: any;
+  modelValue: boolean
+  limit?: boolean
+  limitLength?: number
+  defaultValue?: any
 }
 interface TypeItem {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 interface PageParams {
-  pageSize: number;
-  currentPage: number;
+  pageSize: number
+  currentPage: number
 }
 
-const uploadRef = ref(null);
-const loading = ref(false);
-const addDialog = ref(false);
-const previewDialog = ref(false);
-const previewImageUrl = ref("");
-const type = ref(1);
-const total = ref(0);
-const checkList = ref<string[]>([]);
-const typeOptions = ref<TypeItem[]>([]);
-const imagesData = ref<any>([]);
+const uploadRef = ref(null)
+const loading = ref(false)
+const addDialog = ref(false)
+const previewDialog = ref(false)
+const previewImageUrl = ref('')
+const type = ref(1)
+const total = ref(0)
+const checkList = ref<string[]>([])
+const typeOptions = ref<TypeItem[]>([])
+const imagesData = ref<any>([])
 const pageParams = reactive<PageParams>({
   pageSize: 10,
-  currentPage: 1,
-});
+  currentPage: 1
+})
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   limit: false,
-  defaultValue: [],
-});
-const emit = defineEmits(["update:modelValue", "check"]);
+  defaultValue: []
+})
+const emit = defineEmits(['update:modelValue', 'check'])
 
 /** 初始化 */
 const init = async () => {
-  await resetCheck();
-  await getImageCategories();
-  await getImages();
-};
+  await resetCheck()
+  await getImageCategories()
+  await getImages()
+}
 
 // 重置数据
 const resetCheck = async () => {
-  pageParams.currentPage = 1;
-  pageParams.pageSize = 10;
-  type.value = 1;
-};
+  pageParams.currentPage = 1
+  pageParams.pageSize = 10
+  type.value = 1
+}
 
 watch(
   () => props.defaultValue,
   () => {
-    checkList.value = props.defaultValue;
+    checkList.value = props.defaultValue
   }
-);
+)
 
 /** 新增分类 */
 const addCategory = () => {
-  addDialog.value = true;
-};
+  addDialog.value = true
+}
 /** 上传图片 */
 const handleUpload = () => {
   if (!typeOptions.value) {
-    return ElMessage.warning("请先新增后再选择类型");
+    return ElMessage.warning('请先新增后再选择类型')
   } else if (!type.value) {
-    return ElMessage.warning("请先选择类型");
+    return ElMessage.warning('请先选择类型')
   } else {
-    (uploadRef.value as any).$el.click();
+    ;(uploadRef.value as any).$el.click()
   }
-};
-const userStore = useUserStore();
-const uploadChange = async (file: UploadFile, _files: UploadFiles) => {
+}
+const userStore = useUserStore()
+const uploadChange = async (file: UploadFile) => {
   try {
     await upload({
       dealerId: userStore.userInfo.dealerId,
       categoryId: type.value,
-      file: file.raw,
-    });
-    ElMessage.success("上传成功");
-    getImages();
-  } catch (error) {}
-};
+      file: file.raw
+    })
+    ElMessage.success('上传成功')
+    getImages()
+  } catch (error) {
+    // continue regardless of error
+  }
+}
 
 /** 关闭 */
 const close = () => {
-  emit("update:modelValue", false);
-};
+  emit('update:modelValue', false)
+}
 
 // 获取图片分类
 const getImageCategories = async () => {
   try {
-    const res = await imageCategories();
-    typeOptions.value = res.body;
+    const res = await imageCategories()
+    typeOptions.value = res.body
   } catch (error) {}
-};
+}
 
 // 获取对应分类的图片数据
 const getImages = async () => {
-  loading.value = true;
+  loading.value = true
   try {
     const res = await images({
       ...pageParams,
-      condition: { categoryId: type.value },
-    });
-    loading.value = false;
-    const { body } = res;
-    total.value = body.totalCount;
-    imagesData.value = body?.pageItems;
+      condition: { categoryId: type.value }
+    })
+    loading.value = false
+    const { body } = res
+    total.value = body.totalCount
+    imagesData.value = body?.pageItems
   } catch (error) {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 const handleChange = () => {
-  pageParams.currentPage = 1;
-  pageParams.pageSize = 10;
-  getImages();
-};
+  pageParams.currentPage = 1
+  pageParams.pageSize = 10
+  getImages()
+}
 
 // 预览图片
 const handlePictureCardPreview = (url: string) => {
-  previewImageUrl.value = url;
-  previewDialog.value = true;
-};
+  previewImageUrl.value = url
+  previewDialog.value = true
+}
 // 下载图片
 const handleCheck = (item: any, check: boolean) => {
   // 超出限制不能选择
   if (props.limit && checkList.value.length === props.limitLength) {
     if (check) {
-      const index = checkList.value.indexOf(item.downloadUrl);
-      checkList.value.splice(index, 1);
+      const index = checkList.value.indexOf(item.downloadUrl)
+      checkList.value.splice(index, 1)
     } else {
-      return ElMessage.warning("最多选择一张");
+      return ElMessage.warning('最多选择一张')
     }
   }
   if (check) {
-    const index = checkList.value.indexOf(item.downloadUrl);
-    checkList.value.splice(index, 1);
+    const index = checkList.value.indexOf(item.downloadUrl)
+    checkList.value.splice(index, 1)
   } else {
-    checkList.value.push(item.downloadUrl);
+    checkList.value.push(item.downloadUrl)
   }
-};
+}
 // 输出图片
 const handleRemove = async (id: string) => {
   try {
-    await remove({ id });
-    ElMessage.success("删除成");
-    getImages();
+    await remove({ id })
+    ElMessage.success('删除成')
+    getImages()
   } catch (error) {}
-};
+}
 // 修改每页数量
 const handleSizeChange = (value: number) => {
-  pageParams.pageSize = value;
-  getImages();
-};
+  pageParams.pageSize = value
+  getImages()
+}
 
 // 改变当前页
 const handleCurrentChange = (value: number) => {
-  pageParams.currentPage = value;
-  getImages();
-};
+  pageParams.currentPage = value
+  getImages()
+}
 
 /** 确认 */
 const confirm = () => {
-  emit("update:modelValue", false);
-  emit("check", checkList.value);
-};
+  emit('update:modelValue', false)
+  emit('check', checkList.value)
+}
 </script>
 <style scoped lang="scss">
 .oper-options {

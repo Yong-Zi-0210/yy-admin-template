@@ -7,18 +7,18 @@
   />
 </template>
 <script setup lang="ts">
-import { use } from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
-import { BarChart, LineChart } from "echarts/charts";
+import { use } from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart, LineChart } from 'echarts/charts'
 import {
   TitleComponent,
   TooltipComponent,
   LegendComponent,
   GridComponent,
-  ToolboxComponent,
-} from "echarts/components";
-import VChart, { THEME_KEY } from "vue-echarts";
-import { ref, provide, watch } from "vue";
+  ToolboxComponent
+} from 'echarts/components'
+import VChart, { THEME_KEY } from 'vue-echarts'
+import { ref, provide, watch } from 'vue'
 
 use([
   CanvasRenderer,
@@ -28,42 +28,42 @@ use([
   ToolboxComponent,
   TitleComponent,
   TooltipComponent,
-  LegendComponent,
-]);
+  LegendComponent
+])
 
 interface Props {
-  data: any;
-  type?: string;
-  width?: string | number;
-  height?: string | number;
+  data: any
+  type?: string
+  width?: string | number
+  height?: string | number
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 300,
-  height: 400,
-});
-provide(THEME_KEY, "dark");
-const option = ref({});
+  height: 400
+})
+provide(THEME_KEY, 'dark')
+const option = ref({})
 
 // 监听数据变化
 watch(
   () => props.data,
   () => {
-    setOption();
+    setOption()
   },
   { deep: true }
-);
+)
 
 // 初始化option
 const setOption = () => {
   option.value = {
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
       axisPointer: {
-        type: "cross",
+        type: 'cross',
         crossStyle: {
-          color: "#999",
-        },
-      },
+          color: '#999'
+        }
+      }
     },
     // toolbox: {
     //   feature: {
@@ -74,62 +74,62 @@ const setOption = () => {
     //   },
     // },
     legend: {
-      data: props.data.legend,
+      data: props.data.legend
     },
     xAxis: [
       {
-        type: "category",
+        type: 'category',
         data: props.data.xAxis,
         axisPointer: {
-          type: "shadow",
-        },
-      },
+          type: 'shadow'
+        }
+      }
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         min: 0,
         max: 300,
         interval: 50,
         axisLabel: {
-          formatter: "{value}",
-        },
+          formatter: '{value}'
+        }
       },
       {
-        type: "value",
+        type: 'value',
         min: 0,
         max: 300,
         interval: 50,
         axisLabel: {
-          formatter: "{value}",
-        },
-      },
+          formatter: '{value}'
+        }
+      }
     ],
     series: [
       {
-        name: "沟通",
-        type: "line",
+        name: '沟通',
+        type: 'line',
         tooltip: {
           valueFormatter: function (value: number) {
-            return value;
-          },
+            return value
+          }
         },
-        data: props.data.communicates,
+        data: props.data.communicates
       },
       {
-        name: "二手车",
-        type: "bar",
+        name: '二手车',
+        type: 'bar',
         yAxisIndex: 1,
         tooltip: {
           valueFormatter: function (value: number) {
-            return value;
-          },
+            return value
+          }
         },
-        data: props.data.usedCars,
-      },
-    ],
-  };
-};
+        data: props.data.usedCars
+      }
+    ]
+  }
+}
 </script>
 <style lang="scss" scoped>
 .chart {

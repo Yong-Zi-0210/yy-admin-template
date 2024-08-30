@@ -59,52 +59,52 @@
 </template>
 
 <script setup lang="ts">
-import useSettingsStore from "@/store/module/settings";
-import useUserStore from "@/store/module/user";
-import { type FormInstance, FormRules, ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
+import useSettingsStore from '@/store/module/settings'
+import useUserStore from '@/store/module/user'
+import { type FormInstance, FormRules, ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
-const settingsStore = useSettingsStore();
-const userStore = useUserStore();
-const ruleFormRef = ref<FormInstance>();
-const loading = ref(false);
-const passwordType = ref("password");
+const settingsStore = useSettingsStore()
+const userStore = useUserStore()
+const ruleFormRef = ref<FormInstance>()
+const loading = ref(false)
+const passwordType = ref('password')
 const loginForm = reactive({
-  account: "admin",
-  password: "Pass@Word",
-});
+  account: 'admin',
+  password: 'Pass@Word'
+})
 
 const loginRules = reactive<FormRules>({
-  account: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  password: [{ required: true, trigger: "blur", message: "请输入密码" }],
-});
+  account: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
+  password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
+})
 // 登录
-const router = useRouter();
+const router = useRouter()
 const handleLogin = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
+  if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
       userStore
         .login({
-          ...loginForm,
+          ...loginForm
         })
         .then(() => {
-          ElMessage.success("登录成功");
-          router.push("/");
-        });
+          ElMessage.success('登录成功')
+          router.push('/')
+        })
     } else {
-      console.log("error submit!", fields);
+      console.log('error submit!', fields)
     }
-  });
-};
+  })
+}
 
 const showPwd = () => {
-  if (passwordType.value === "password") {
-    passwordType.value = "";
+  if (passwordType.value === 'password') {
+    passwordType.value = ''
   } else {
-    passwordType.value = "password";
+    passwordType.value = 'password'
   }
-};
+}
 </script>
 
 <style lang="scss">

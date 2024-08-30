@@ -32,11 +32,9 @@
       <el-table-column prop="carTitle" label="二手车名称" width="200" />
       <el-table-column prop="statusDescription" label="状态">
         <template v-slot="scope">
-          <el-text
-            v-if="scope.row.status === '001'"
-            :type="statusMap[scope.row.status]"
-            >{{ scope.row.statusDescription }}</el-text
-          >
+          <el-text v-if="scope.row.status === '001'" :type="statusMap[scope.row.status]">{{
+            scope.row.statusDescription
+          }}</el-text>
           <el-text v-else :type="statusMap[scope.row.status]">{{
             scope.row.statusDescription
           }}</el-text>
@@ -67,25 +65,13 @@
             :visible="scope.row.visible"
           >
             <template #reference>
-              <el-button
-                type="primary"
-                size="small"
-                @click.stop="scope.row.visible = true"
+              <el-button type="primary" size="small" @click.stop="scope.row.visible = true"
                 >获取用户信息</el-button
               >
             </template>
-            <div style="font-size: 12px; margin-bottom: 10px">
-              确认获取用户信息
-            </div>
-            <el-button size="small" @click="scope.row.visible = false"
-              >取消</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleUpdate(scope.row)"
-              >确定</el-button
-            >
+            <div style="font-size: 12px; margin-bottom: 10px"> 确认获取用户信息 </div>
+            <el-button size="small" @click="scope.row.visible = false">取消</el-button>
+            <el-button size="small" type="primary" @click="handleUpdate(scope.row)">确定</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -106,88 +92,88 @@
 </template>
 
 <script setup lang="ts">
-import FromatDate from "@/views/components/FromatDate.vue";
-import { communication, update } from "@/api/communicate";
-import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
-import { ElMessage } from "element-plus";
+import FromatDate from '@/views/components/FromatDate.vue'
+import { communication, update } from '@/api/communicate'
+import { maxHeight, useTableHeight } from '@/hooks/useTableHeight'
+import { ElMessage } from 'element-plus'
 
-useTableHeight(); // 动态修改表格高度
-const loading = ref(false);
-const tableData = ref([]);
+useTableHeight() // 动态修改表格高度
+const loading = ref(false)
+const tableData = ref([])
 const statusOptions = [
-  { value: "", label: "全部" },
-  { value: "001", label: "待沟通" },
-  { value: "090", label: "已确认" },
-];
+  { value: '', label: '全部' },
+  { value: '001', label: '待沟通' },
+  { value: '090', label: '已确认' }
+]
 const statusMap = {
-  "001": "warning",
-  "090": "success",
-} as any;
+  '001': 'warning',
+  '090': 'success'
+} as any
 
 // 过滤字段
 const filterForm = reactive({
-  status: "",
-});
+  status: ''
+})
 // 分页信息
-const total = ref(0);
+const total = ref(0)
 const pageParams = reactive({
   currentPage: 1,
-  pageSize: 20,
-});
+  pageSize: 20
+})
 
 // 列表请求
 const getData = async () => {
-  loading.value = true;
+  loading.value = true
   try {
     const res = await communication({
       ...pageParams,
       condition: {
-        ...filterForm,
-      },
-    });
-    loading.value = false;
-    const { body } = res;
-    total.value = body.totalCount;
-    tableData.value = body.pageItems;
+        ...filterForm
+      }
+    })
+    loading.value = false
+    const { body } = res
+    total.value = body.totalCount
+    tableData.value = body.pageItems
   } catch (error) {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 // 初始化列表数据
-getData();
+getData()
 
 // 搜索
 const search = () => {
-  pageParams.pageSize = 20;
-  pageParams.currentPage = 1;
-  getData();
-};
+  pageParams.pageSize = 20
+  pageParams.currentPage = 1
+  getData()
+}
 
 // 确认沟通
 const handleUpdate = async (row: any) => {
   try {
-    await update({ id: row.id });
-    row.visible = false;
-    getData();
-    ElMessage.success("修改成功");
+    await update({ id: row.id })
+    row.visible = false
+    getData()
+    ElMessage.success('修改成功')
   } catch (error) {}
-};
+}
 
 // 修改每页数量
 const handleSizeChange = (value: number) => {
-  pageParams.pageSize = value;
-  getData();
-};
+  pageParams.pageSize = value
+  getData()
+}
 
 // 改变当前页
 const handleCurrentChange = (value: number) => {
-  pageParams.currentPage = value;
-  getData();
-};
+  pageParams.currentPage = value
+  getData()
+}
 // 重置
 const reset = () => {
-  filterForm.status = "";
-};
+  filterForm.status = ''
+}
 </script>
 <style lang="scss" scoped>
 .header {

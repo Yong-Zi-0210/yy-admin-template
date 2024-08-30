@@ -1,38 +1,38 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue";
-import { type RouteLocationMatched, useRoute, useRouter } from "vue-router";
+import { ref, watch } from 'vue'
+import { type RouteLocationMatched, useRoute, useRouter } from 'vue-router'
 // import { useRouteListener } from "@/hooks/useRouteListener";
-import { compile } from "path-to-regexp";
+import { compile } from 'path-to-regexp'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 // const { listenerRouteChange } = useRouteListener();
 
 /** 定义响应式数据 breadcrumbs，用于存储面包屑导航信息 */
-const breadcrumbs = ref<RouteLocationMatched[]>([]);
+const breadcrumbs = ref<RouteLocationMatched[]>([])
 
 /** 获取面包屑导航信息 */
 const getBreadcrumb = () => {
   breadcrumbs.value = route.matched.filter(
-    (item) => item.meta?.title && item.meta?.breadcrumb !== false
-  );
-};
+    item => item.meta?.title && item.meta?.breadcrumb !== false
+  )
+}
 
 /** 编译路由路径 */
 const pathCompile = (path: string) => {
-  const toPath = compile(path);
-  return toPath(route.params);
-};
+  const toPath = compile(path)
+  return toPath(route.params)
+}
 
 /** 处理面包屑导航点击事件 */
 const handleLink = (item: RouteLocationMatched) => {
-  const { redirect, path } = item;
+  const { redirect, path } = item
   if (redirect) {
-    router.push(redirect as string);
-    return;
+    router.push(redirect as string)
+    return
   }
-  router.push(pathCompile(path));
-};
+  router.push(pathCompile(path))
+}
 
 /** 监听路由变化，更新面包屑导航信息 */
 // listenerRouteChange((route) => {
@@ -42,10 +42,10 @@ const handleLink = (item: RouteLocationMatched) => {
 watch(
   () => router.currentRoute.value.path,
   () => {
-    getBreadcrumb();
+    getBreadcrumb()
   },
   { immediate: true, deep: true }
-);
+)
 </script>
 
 <template>
@@ -53,9 +53,7 @@ watch(
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
         <span
-          v-if="
-            item.redirect === 'noRedirect' || index == breadcrumbs.length - 1
-          "
+          v-if="item.redirect === 'noRedirect' || index == breadcrumbs.length - 1"
           class="no-redirect"
           >{{ item.meta.title }}</span
         >

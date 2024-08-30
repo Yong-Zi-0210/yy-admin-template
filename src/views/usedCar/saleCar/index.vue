@@ -13,10 +13,7 @@
             <el-input v-model="filterForm.contactName" placeholder="联系人" />
           </el-form-item>
           <el-form-item label="联系电话">
-            <el-input
-              v-model="filterForm.contactPhone"
-              placeholder="联系电话"
-            />
+            <el-input v-model="filterForm.contactPhone" placeholder="联系电话" />
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="filterForm.status">
@@ -51,9 +48,7 @@
       <el-table-column prop="contactPhone" label="联系电话" width="120" />
       <el-table-column prop="status" label="状态">
         <template v-slot="scope">
-          <el-text :type="statusType[scope.row.status]">{{
-            statusMap[scope.row.status]
-          }}</el-text>
+          <el-text :type="statusType[scope.row.status]">{{ statusMap[scope.row.status] }}</el-text>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
@@ -76,21 +71,13 @@
             :visible="scope.row.visible"
           >
             <template #reference>
-              <el-button
-                type="primary"
-                size="small"
-                @click.stop="scope.row.visible = true"
+              <el-button type="primary" size="small" @click.stop="scope.row.visible = true"
                 >确认联系</el-button
               >
             </template>
             <div style="font-size: 12px; margin-bottom: 10px">确认已联系？</div>
-            <el-button size="small" @click="scope.row.visible = false"
-              >否</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              @click="confirmContact(scope.row.id)"
+            <el-button size="small" @click="scope.row.visible = false">否</el-button>
+            <el-button size="small" type="primary" @click="confirmContact(scope.row.id)"
               >是</el-button
             >
           </el-popover>
@@ -113,98 +100,98 @@
 </template>
 
 <script setup lang="ts">
-import { saleCarList, confirmContacted } from "@/api/usedCar";
-import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
+import { saleCarList, confirmContacted } from '@/api/usedCar'
+import { maxHeight, useTableHeight } from '@/hooks/useTableHeight'
 
-const loading = ref(false);
-const tableData = ref([]);
-useTableHeight();
+const loading = ref(false)
+const tableData = ref([])
+useTableHeight()
 const statusOptions = [
-  { value: "", label: "全部" },
-  { value: "001", label: "待联系" },
-  { value: "002", label: "已联系" },
-];
+  { value: '', label: '全部' },
+  { value: '001', label: '待联系' },
+  { value: '002', label: '已联系' }
+]
 const statusMap = reactive<any>({
-  "001": "待联系",
-  "002": "已联系",
-});
+  '001': '待联系',
+  '002': '已联系'
+})
 const statusType = reactive<any>({
-  "001": "info",
-  "002": "success",
-  true: "success",
-  false: "info",
-});
+  '001': 'info',
+  '002': 'success',
+  true: 'success',
+  false: 'info'
+})
 
 // 过滤字段
 const filterForm = reactive({
-  city: "", // 城市
-  brand: "", // 品牌
-  contactName: "", // 联系人姓名
-  contactPhone: "", // 联系人电话
-  status: "", // 状态
-});
+  city: '', // 城市
+  brand: '', // 品牌
+  contactName: '', // 联系人姓名
+  contactPhone: '', // 联系人电话
+  status: '' // 状态
+})
 // 分页信息
-const total = ref(0);
+const total = ref(0)
 const pageParams = reactive({
   currentPage: 1,
-  pageSize: 20,
-});
+  pageSize: 20
+})
 
 // 列表请求
 const getData = async () => {
-  loading.value = true;
+  loading.value = true
   try {
     const res = await saleCarList({
       ...pageParams,
       condition: {
-        ...filterForm,
-      },
-    });
-    loading.value = false;
-    const { body } = res;
-    total.value = body.totalCount;
-    tableData.value = body.pageItems;
+        ...filterForm
+      }
+    })
+    loading.value = false
+    const { body } = res
+    total.value = body.totalCount
+    tableData.value = body.pageItems
   } catch (error) {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 // 初始化列表数据
-getData();
+getData()
 
 // 搜索
 const search = () => {
-  pageParams.currentPage = 1;
-  pageParams.pageSize = 20;
-  getData();
-};
+  pageParams.currentPage = 1
+  pageParams.pageSize = 20
+  getData()
+}
 
 // 分配经销商
 const confirmContact = async (id: string) => {
   try {
-    await confirmContacted({ id });
-    getData();
+    await confirmContacted({ id })
+    getData()
   } catch (error) {}
-};
+}
 
 // 修改每页数量
 const handleSizeChange = (value: number) => {
-  pageParams.pageSize = value;
-  getData();
-};
+  pageParams.pageSize = value
+  getData()
+}
 
 // 改变当前页
 const handleCurrentChange = (value: number) => {
-  pageParams.currentPage = value;
-  getData();
-};
+  pageParams.currentPage = value
+  getData()
+}
 // 重置
 const reset = () => {
-  filterForm.city = ""; // 城市
-  filterForm.brand = ""; // 品牌
-  filterForm.contactName = ""; // 联系人姓名
-  filterForm.contactPhone = ""; // 联系人电话
-  filterForm.status = ""; // 状态
-};
+  filterForm.city = '' // 城市
+  filterForm.brand = '' // 品牌
+  filterForm.contactName = '' // 联系人姓名
+  filterForm.contactPhone = '' // 联系人电话
+  filterForm.status = '' // 状态
+}
 </script>
 <style lang="scss" scoped>
 .filter {

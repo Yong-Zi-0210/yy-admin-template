@@ -1,62 +1,58 @@
-import {
-  type RouteRecordRaw,
-  createRouter,
-  createWebHashHistory,
-} from "vue-router";
-import usedCar from "./usedCar";
+import { type RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
+import usedCar from './usedCar'
 
-const Layout = () => import("@/layout/index.vue");
-export const constantRoutes: RouteRecordRaw[] = [];
-export const asyncRoutes: RouteRecordRaw[] = [];
+const Layout = () => import('@/layout/index.vue')
+export const constantRoutes: RouteRecordRaw[] = []
+export const asyncRoutes: RouteRecordRaw[] = []
 // const whiteList = ["/login"];
 
 // 固定路由
 const routers: RouteRecordRaw[] = [
   {
-    path: "/login",
-    component: () => import("@/views/login/index.vue"),
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
     meta: {
-      hidden: true,
-    },
+      hidden: true
+    }
   },
   {
-    path: "/",
+    path: '/',
     component: Layout,
-    redirect: "/home",
+    redirect: '/home',
     children: [
       {
-        path: "home",
-        component: () => import("@/views/home/index.vue"),
-        name: "Home",
+        path: 'home',
+        component: () => import('@/views/home/index.vue'),
+        name: 'Home',
         meta: {
-          title: "首页",
-          svgIcon: "home",
-        },
-      },
-    ],
+          title: '首页',
+          svgIcon: 'home'
+        }
+      }
+    ]
   },
   ...usedCar,
   {
-    path: "/404",
-    component: () => import("@/views/error-page/404.vue"),
+    path: '/404',
+    component: () => import('@/views/error-page/404.vue'),
     meta: {
-      hidden: true,
-    },
+      hidden: true
+    }
   },
   {
-    path: "/:pathMatch(.*)*", // 必须将 'ErrorPage' 路由放在最后
-    redirect: "/404",
-    name: "ErrorPage",
+    path: '/:pathMatch(.*)*', // 必须将 'ErrorPage' 路由放在最后
+    redirect: '/404',
+    name: 'ErrorPage',
     meta: {
-      hidden: true,
-    },
-  },
-];
+      hidden: true
+    }
+  }
+]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: routers,
-});
+  routes: routers
+})
 /** 重置路由 */
 export function resetRouter() {
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
@@ -68,11 +64,11 @@ export function resetRouter() {
     //     router.hasRoute(name) && router.removeRoute(name);
     //   }
     // });
-    router.push("/login");
+    router.push('/login')
   } catch {
     // 强制刷新浏览器也行，只是交互体验不是很好
-    window.location.reload();
+    window.location.reload()
   }
 }
 
-export default router;
+export default router

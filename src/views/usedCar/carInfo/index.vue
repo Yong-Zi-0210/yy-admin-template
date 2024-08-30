@@ -59,9 +59,7 @@
       <el-table-column prop="brand" label="品牌" />
       <el-table-column prop="address" label="状态" width="120">
         <template v-slot="scope">
-          <el-text :type="statusType[scope.row.status]">{{
-            statusMap[scope.row.status]
-          }}</el-text>
+          <el-text :type="statusType[scope.row.status]">{{ statusMap[scope.row.status] }}</el-text>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
@@ -84,33 +82,21 @@
           >
             编辑
           </el-button>
-          <el-popover
-            placement="top"
-            :width="120"
-            trigger="click"
-            :visible="scope.row.visible"
-          >
+          <el-popover placement="top" :width="120" trigger="click" :visible="scope.row.visible">
             <template #reference>
               <el-button
                 size="small"
                 @click="scope.row.visible = true"
                 :type="scope.row.status === '002' ? 'danger' : 'primary'"
               >
-                {{ scope.row.status === "002" ? "下架" : "上架" }}
+                {{ scope.row.status === '002' ? '下架' : '上架' }}
               </el-button>
             </template>
             <div style="font-size: 12px; margin-bottom: 10px">
-              {{ scope.row.status === "002" ? "确定下架?" : "确定上架?" }}
+              {{ scope.row.status === '002' ? '确定下架?' : '确定上架?' }}
             </div>
-            <el-button size="small" @click="scope.row.visible = false"
-              >取消</el-button
-            >
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleSwitch(scope.row)"
-              >确定</el-button
-            >
+            <el-button size="small" @click="scope.row.visible = false">取消</el-button>
+            <el-button size="small" type="primary" @click="handleSwitch(scope.row)">确定</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -132,114 +118,114 @@
 </template>
 
 <script setup lang="ts">
-import { usedCarList, updateStatus } from "@/api/usedCar";
-import { Condition } from "@/api/usedCar/types";
-import { maxHeight, useTableHeight } from "@/hooks/useTableHeight";
-import { ElMessage } from "element-plus";
+import { usedCarList, updateStatus } from '@/api/usedCar'
+import { Condition } from '@/api/usedCar/types'
+import { maxHeight, useTableHeight } from '@/hooks/useTableHeight'
+import { ElMessage } from 'element-plus'
 
-const loading = ref(false);
-const addOrEditDialog = ref(false);
-const editId = ref("");
-const tableData = ref([]);
-useTableHeight();
+const loading = ref(false)
+const addOrEditDialog = ref(false)
+const editId = ref('')
+const tableData = ref([])
+useTableHeight()
 const statusOptions = [
-  { value: "", label: "全部" },
-  { value: "001", label: "从未上架" },
-  { value: "002", label: "上架" },
-  { value: "003", label: "下架" },
-];
+  { value: '', label: '全部' },
+  { value: '001', label: '从未上架' },
+  { value: '002', label: '上架' },
+  { value: '003', label: '下架' }
+]
 const statusMap = reactive<any>({
-  "001": "从未上架",
-  "002": "上架",
-  "003": "下架",
-});
+  '001': '从未上架',
+  '002': '上架',
+  '003': '下架'
+})
 
 const statusType = reactive<any>({
-  "001": "info",
-  "002": "success",
-  "003": "danger",
-});
+  '001': 'info',
+  '002': 'success',
+  '003': 'danger'
+})
 
 // 过滤字段
 const filterForm = reactive<Condition>({
-  brandId: "",
-  status: "",
-});
+  brandId: '',
+  status: ''
+})
 // 分页信息
-const total = ref(0);
+const total = ref(0)
 const pageParams = reactive({
   currentPage: 1,
-  pageSize: 20,
-});
+  pageSize: 20
+})
 
 // 列表请求
 const getData = async () => {
-  loading.value = true;
+  loading.value = true
   try {
     const res = await usedCarList({
       ...pageParams,
       condition: {
-        ...filterForm,
-      },
-    });
-    loading.value = false;
-    const { body } = res;
-    total.value = body.totalCount;
-    tableData.value = body.pageItems;
+        ...filterForm
+      }
+    })
+    loading.value = false
+    const { body } = res
+    total.value = body.totalCount
+    tableData.value = body.pageItems
   } catch (error) {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 // 初始化列表数据
-getData();
+getData()
 
 // 搜索
 const search = () => {
-  pageParams.currentPage = 1;
-  pageParams.pageSize = 20;
-  getData();
-};
+  pageParams.currentPage = 1
+  pageParams.pageSize = 20
+  getData()
+}
 
 // 新增
 const openDialog = () => {
-  editId.value = "";
-  addOrEditDialog.value = true;
-};
+  editId.value = ''
+  addOrEditDialog.value = true
+}
 // 编辑
 const handleEdit = (id: string) => {
-  addOrEditDialog.value = true;
-  editId.value = id;
-};
+  addOrEditDialog.value = true
+  editId.value = id
+}
 // 删除
 const handleSwitch = async (row: any) => {
-  row.visible = false;
+  row.visible = false
   await updateStatus({
-    type: row.status !== "002" ? "002" : "003",
-    id: row.id,
-  });
-  ElMessage.success("操作成功");
-  search();
-};
+    type: row.status !== '002' ? '002' : '003',
+    id: row.id
+  })
+  ElMessage.success('操作成功')
+  search()
+}
 // 更新数据
 const update = () => {
-  search();
-};
+  search()
+}
 
 // 修改每页数量
 const handleSizeChange = (value: number) => {
-  pageParams.pageSize = value;
-  getData();
-};
+  pageParams.pageSize = value
+  getData()
+}
 
 // 改变当前页
 const handleCurrentChange = (value: number) => {
-  pageParams.currentPage = value;
-  getData();
-};
+  pageParams.currentPage = value
+  getData()
+}
 // 重置
 const reset = () => {
-  filterForm.status = "";
-};
+  filterForm.status = ''
+}
 </script>
 <style lang="scss" scoped>
 .header {

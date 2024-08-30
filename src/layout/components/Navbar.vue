@@ -1,10 +1,6 @@
 <template>
   <div class="navigation-bar">
-    <Hamburger
-      :is-active="sidebar.opened"
-      class="hamburger"
-      @toggleClick="toggleSideBar"
-    />
+    <Hamburger :is-active="sidebar.opened" class="hamburger" @toggleClick="toggleSideBar" />
 
     <Breadcrumb class="breadcrumb" />
 
@@ -34,22 +30,22 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import useAppStore from "@/store/module/app";
-import useUserStore from "@/store/module/user";
-import { UserFilled } from "@element-plus/icons-vue";
-const appStore = useAppStore();
-const userStore = useUserStore();
-const { sidebar } = storeToRefs(appStore);
-const { userInfo } = storeToRefs(userStore);
-console.log(userInfo);
+import { storeToRefs } from 'pinia'
+import useAppStore from '@/store/module/app'
+import useUserStore from '@/store/module/user'
+import { UserFilled } from '@element-plus/icons-vue'
+const appStore = useAppStore()
+const userStore = useUserStore()
+const { sidebar } = storeToRefs(appStore)
+const { userInfo } = storeToRefs(userStore)
+console.log(userInfo)
 const toggleSideBar = () => {
-  appStore.toggleSidebar(false);
-};
+  appStore.toggleSidebar(false)
+}
 // 登出
 const logout = () => {
-  userStore.logout();
-};
+  userStore.logout()
+}
 </script>
 
 <style lang="scss" scoped>

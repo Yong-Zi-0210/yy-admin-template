@@ -25,29 +25,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import useAppStore from "@/store/module/app";
-import useSettingsStore from "@/store/module/settings";
-import { getCssVariableValue } from "@/utils";
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import useAppStore from '@/store/module/app'
+import useSettingsStore from '@/store/module/settings'
+import { getCssVariableValue } from '@/utils'
 
-const { sidebar } = useAppStore();
-const route = useRoute();
-const router = useRouter();
-const settingsStore = useSettingsStore();
+const { sidebar } = useAppStore()
+const route = useRoute()
+const router = useRouter()
+const settingsStore = useSettingsStore()
 
-const routes = computed(() => router.options.routes);
-const showLogo = computed(() => settingsStore.showLogo);
-const isCollapse = computed(() => !sidebar.opened);
-const backgroundColor = getCssVariableValue("$menuBg");
-const textColor = getCssVariableValue("$menuText");
-const activeTextColor = getCssVariableValue("$menuActiveText");
+const routes = computed(() => router.options.routes)
+const showLogo = computed(() => settingsStore.showLogo)
+const isCollapse = computed(() => !sidebar.opened)
+const backgroundColor = getCssVariableValue('$menuBg')
+const textColor = getCssVariableValue('$menuText')
+const activeTextColor = getCssVariableValue('$menuActiveText')
 
 const activeMenu = computed(() => {
   const {
     meta: { activeMenu },
-    path,
-  } = route;
-  return activeMenu ? activeMenu : path;
-});
+    path
+  } = route
+  return activeMenu ? activeMenu : path
+})
 </script>

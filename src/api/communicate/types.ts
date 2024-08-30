@@ -1,9 +1,9 @@
 interface Condition {
-  status: string;
+  status: string
 }
 
 export interface CommunicationRequest {
-  currentPage: number;
-  pageSize: number;
-  condition: Condition;
+  currentPage: number
+  pageSize: number
+  condition: Condition
 }

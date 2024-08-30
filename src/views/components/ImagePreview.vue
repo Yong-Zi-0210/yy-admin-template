@@ -15,11 +15,11 @@
 </template>
 <script setup lang="ts">
 interface Props {
-  src: string;
-  previewSrcList: any;
+  src: string
+  previewSrcList: any
 }
 const props = withDefaults(defineProps<Props>(), {
-  src: "",
-  previewSrcList: [],
-});
+  src: '',
+  previewSrcList: []
+})
 </script>

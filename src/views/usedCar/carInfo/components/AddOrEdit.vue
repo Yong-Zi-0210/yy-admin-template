@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { addCar, editCar, detail } from "@/api/usedCar";
-import config from "../paramsConfig";
-import useRules from "./formRules";
-import { ElMessage, FormInstance } from "element-plus";
+import { addCar, editCar, detail } from '@/api/usedCar'
+import config from '../paramsConfig'
+import useRules from './formRules'
+import { ElMessage, FormInstance } from 'element-plus'
 
 interface Props {
-  modelValue: boolean;
-  id?: string | number;
+  modelValue: boolean
+  id?: string | number
 }
 enum ImageTypes {
   displayImage = 1, // 显示图片
@@ -14,143 +14,145 @@ enum ImageTypes {
   checkReports = 3, // 检验图集
   appearances = 4, // 外观
   interiors = 5, // 内饰
-  chassises = 6, // 发动机
+  chassises = 6 // 发动机
 }
 interface AnyObject {
-  [key: string]: any;
+  [key: string]: any
 }
-const uploadImageDialog = ref(false);
-const uploadLimitLength = ref(1);
-const defaultChcek = ref<string[]>([]);
-const limit = ref(false);
-const imageTypes = ref(1);
-const baseFormRef = ref<FormInstance>();
-const emit = defineEmits(["update:modelValue", "refresh"]);
+const uploadImageDialog = ref(false)
+const uploadLimitLength = ref(1)
+const defaultChcek = ref<string[]>([])
+const limit = ref(false)
+const imageTypes = ref(1)
+const baseFormRef = ref<FormInstance>()
+const emit = defineEmits(['update:modelValue', 'refresh'])
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-  id: "",
-});
+  id: ''
+})
 // 车辆信息
-const carInfo = ref<AnyObject>([]);
+const carInfo = ref<AnyObject>([])
 // 基本信息
-const baseRules = useRules();
+const baseRules = useRules()
 const baseForm = reactive<AnyObject>({
-  name: "", // 车名
-  city: "", // 城市
-  price: "", // 价格
-  displayImage: "", // 显示图片
+  name: '', // 车名
+  city: '', // 城市
+  price: '', // 价格
+  displayImage: '', // 显示图片
   images: [] as any[], // 图集
   checkReports: [] as any[], // 车检报告图片
   appearances: [] as any[], // 外观图集
   interiors: [] as any[], // 内饰图集
   chassises: [] as any[], // 发动机图集
-  description: "", // 描述
-  tag: "", // 标签
-  type: "", // 车型
-  brandId: "", // 品牌id
-  brand: "", // 品牌名称
-  firstPlateTime: "", // 首次上牌时间
-  transferNum: "", // 过户次数
-  energy: "", // 能源
-  mileage: "", // 里程
-  carAge: "", // 车龄
-  transmission: "", // 变速箱
-  displacement: "", // 排量
-  emissionStandard: "", // 排量标准
-  drivingMeans: "", // 驱动
-  downPayment: "", // 首付
-  productionYear: "", // 生产年份
-});
-const operType = computed(() => (!props.id ? "add" : "edit"));
-const title = computed(() => (props.id ? "修改信息" : "新增"));
-const disabled = computed(() => operType.value === "edit");
+  description: '', // 描述
+  tag: '', // 标签
+  type: '', // 车型
+  brandId: '', // 品牌id
+  brand: '', // 品牌名称
+  firstPlateTime: '', // 首次上牌时间
+  transferNum: '', // 过户次数
+  energy: '', // 能源
+  mileage: '', // 里程
+  carAge: '', // 车龄
+  transmission: '', // 变速箱
+  displacement: '', // 排量
+  emissionStandard: '', // 排量标准
+  drivingMeans: '', // 驱动
+  downPayment: '', // 首付
+  productionYear: '' // 生产年份
+})
+const operType = computed(() => (!props.id ? 'add' : 'edit'))
+const title = computed(() => (props.id ? '修改信息' : '新增'))
+const disabled = computed(() => operType.value === 'edit')
 /** 打开 */
 const open = () => {
   nextTick(() => {
-    const drawerDody = document.querySelector(".el-drawer__body");
-    drawerDody?.scrollTo({ top: 0 });
-    baseFormRef.value?.resetFields();
+    const drawerDody = document.querySelector('.el-drawer__body')
+    drawerDody?.scrollTo({ top: 0 })
+    baseFormRef.value?.resetFields()
     if (props.id) {
-      getDetail();
+      getDetail()
     } else {
-      carInfo.value = config.data.vehicleConfig;
+      carInfo.value = config.data.vehicleConfig
     }
-  });
-};
+  })
+}
 /** 关闭 */
 const close = () => {
-  emit("update:modelValue", false);
-};
+  emit('update:modelValue', false)
+}
 
 // 新增
 const add = async (data: object) => {
-  await addCar(data);
-  ElMessage.success("新增成功");
-};
+  await addCar(data)
+  ElMessage.success('新增成功')
+}
 
 // 编辑
 const edit = async (data: object) => {
-  await editCar(data);
-  ElMessage.success("修改成功");
-};
+  await editCar(data)
+  ElMessage.success('修改成功')
+}
 
 // 选择图片
 const uploadImage = (value: number) => {
   if (value === 1) {
-    limit.value = true;
-    uploadLimitLength.value = 1;
-    defaultChcek.value = baseForm.displayImage ? [baseForm.displayImage] : [];
+    limit.value = true
+    uploadLimitLength.value = 1
+    defaultChcek.value = baseForm.displayImage ? [baseForm.displayImage] : []
   } else {
-    limit.value = false;
-    defaultChcek.value = baseForm[ImageTypes[value]];
+    limit.value = false
+    defaultChcek.value = baseForm[ImageTypes[value]]
   }
-  uploadImageDialog.value = true;
-  imageTypes.value = value;
-};
+  uploadImageDialog.value = true
+  imageTypes.value = value
+}
 // 选择图片回调
 const handleSelect = (data: string[]) => {
   // 显示图片每次都覆盖
   if (imageTypes.value === 1) {
-    baseForm[ImageTypes[imageTypes.value]] = data[0];
+    baseForm[ImageTypes[imageTypes.value]] = data[0]
   } else {
-    let arr = baseForm[ImageTypes[imageTypes.value]].concat(data);
-    arr = [...new Set(arr)];
-    baseForm[ImageTypes[imageTypes.value]] = arr;
+    let arr = baseForm[ImageTypes[imageTypes.value]].concat(data)
+    arr = [...new Set(arr)]
+    baseForm[ImageTypes[imageTypes.value]] = arr
   }
-  console.log(baseForm[ImageTypes[imageTypes.value]]);
-};
+  console.log(baseForm[ImageTypes[imageTypes.value]])
+}
 
 // 处理回显数据
 const initFormFields = (detail: any) => {
   for (const key in detail) {
     if (Object.prototype.hasOwnProperty.call(baseForm, key)) {
-      baseForm[key] = detail[key];
+      baseForm[key] = detail[key]
     }
-    carInfo.value = JSON.parse(detail.params)?.data?.vehicleConfig;
+    carInfo.value = JSON.parse(detail.params)?.data?.vehicleConfig
   }
-};
+}
 
 // 获取详情
 const getDetail = async () => {
-  const res = await detail({ id: props.id });
-  initFormFields(res.body);
-};
+  const res = await detail({ id: props.id })
+  initFormFields(res.body)
+}
 
 /** 确认 */
 const confirm = () => {
-  baseFormRef.value?.validate(async (validate) => {
+  baseFormRef.value?.validate(async validate => {
     if (validate) {
-      const params = JSON.stringify({ data: { vehicleConfig: carInfo.value } });
-      operType.value === "add"
-        ? await add({ ...baseForm, id: props.id, params })
-        : await edit({ ...baseForm, id: props.id, params });
-      emit("update:modelValue", false);
-      emit("refresh");
+      const params = JSON.stringify({ data: { vehicleConfig: carInfo.value } })
+      if (operType.value === 'add') {
+        await add({ ...baseForm, id: props.id, params })
+      } else {
+        await edit({ ...baseForm, id: props.id, params })
+      }
+      emit('update:modelValue', false)
+      emit('refresh')
     } else {
-      ElMessage.error("数据校验不通过");
+      ElMessage.error('数据校验不通过')
     }
-  });
-};
+  })
+}
 </script>
 
 <template>
@@ -166,12 +168,7 @@ const confirm = () => {
     <template #default>
       <div class="base-info">
         <div class="header">基本信息</div>
-        <el-form
-          :model="baseForm"
-          :rules="baseRules"
-          label-width="auto"
-          ref="baseFormRef"
-        >
+        <el-form :model="baseForm" :rules="baseRules" label-width="auto" ref="baseFormRef">
           <el-row :gutter="24">
             <el-col :span="8">
               <el-form-item label="名称" prop="name">
@@ -192,10 +189,7 @@ const confirm = () => {
           <el-row :gutter="24">
             <el-col :span="8">
               <el-form-item label="品牌" prop="brandId">
-                <Brand
-                  v-model:brandId="baseForm.brandId"
-                  v-model:brand="baseForm.brand"
-                />
+                <Brand v-model:brandId="baseForm.brandId" v-model:brand="baseForm.brand" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -280,39 +274,27 @@ const confirm = () => {
 
           <el-form-item label="图片集" prop="images">
             <Image v-model="baseForm.images" />
-            <el-button type="primary" @click="uploadImage(2)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(2)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="车检报告图片" prop="checkReports">
             <Image v-model="baseForm.checkReports" />
-            <el-button type="primary" @click="uploadImage(3)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(3)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="外观图集" prop="appearances">
             <Image v-model="baseForm.appearances" />
-            <el-button type="primary" @click="uploadImage(4)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(4)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="内饰图集" prop="interiors">
             <Image v-model="baseForm.interiors" />
-            <el-button type="primary" @click="uploadImage(5)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(5)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="发动机图集" prop="chassises">
             <Image v-model="baseForm.chassises" />
-            <el-button type="primary" @click="uploadImage(6)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(6)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="显示图片" prop="displayImage">
             <Image v-model="baseForm.displayImage" />
-            <el-button type="primary" @click="uploadImage(1)"
-              >选择图片</el-button
-            >
+            <el-button type="primary" @click="uploadImage(1)">选择图片</el-button>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input type="textarea" v-model="baseForm.description"></el-input>
@@ -322,7 +304,7 @@ const confirm = () => {
       <div class="car-info item" v-for="(item, index) in carInfo" :key="index">
         <div class="header">{{ item.name }}</div>
         <div class="config">
-          <div class="config-item" v-for="(_value, key) in item.config">
+          <div class="config-item" v-for="(_value, key) in item.config" :key="_value">
             <span class="label">{{ key }}：</span>
             <input :disabled="disabled" v-model="item.config[key]" />
           </div>

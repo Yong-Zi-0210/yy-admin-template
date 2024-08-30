@@ -2,48 +2,46 @@
   <ul class="list">
     <li class="list-item" v-for="(item, index) in data" :key="index">
       <el-image :src="item" fit="cover" />
-      <el-icon v-if="isDelete" @click="handleDelete(index)"
-        ><CircleCloseFilled
-      /></el-icon>
+      <el-icon v-if="isDelete" @click="handleDelete(index)"><CircleCloseFilled /></el-icon>
     </li>
   </ul>
 </template>
 <script setup lang="ts">
 interface Props {
-  modelValue: string[] | string;
-  isDelete?: boolean;
+  modelValue: string[] | string
+  isDelete?: boolean
 }
-const data = ref<string[]>([]);
+const data = ref<string[]>([])
 const props = withDefaults(defineProps<Props>(), {
   modelValue: () => [],
-  isDelete: true,
-});
+  isDelete: true
+})
 
 watch(
   () => props.modelValue,
   () => {
-    if (typeof props.modelValue === "string") {
+    if (typeof props.modelValue === 'string') {
       if (props.modelValue) {
-        data.value = [props.modelValue];
+        data.value = [props.modelValue]
       } else {
-        data.value = [];
+        data.value = []
       }
     } else {
-      data.value = props.modelValue;
+      data.value = props.modelValue
     }
   }
-);
+)
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 
 const handleDelete = (index: number) => {
-  data.value.splice(index, 1);
-  if (typeof props.modelValue === "string") {
-    emit("update:modelValue", data.value[0] ? data.value[0] : "");
+  data.value.splice(index, 1)
+  if (typeof props.modelValue === 'string') {
+    emit('update:modelValue', data.value[0] ? data.value[0] : '')
   } else {
-    emit("update:modelValue", data.value);
+    emit('update:modelValue', data.value)
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .list {

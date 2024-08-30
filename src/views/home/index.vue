@@ -13,9 +13,7 @@
         <el-card class="card-item">
           <div class="sub-item">
             <span class="title">今日新增二手车数：</span>
-            <span class="number" :title="usedCarsIncrementToday">{{
-              usedCarsIncrementToday
-            }}</span>
+            <span class="number" :title="usedCarsIncrementToday">{{ usedCarsIncrementToday }}</span>
           </div>
           <div class="sub-item">
             <span class="title">昨日新增二手车数：</span>
@@ -27,15 +25,11 @@
         <el-card class="card-item">
           <div class="sub-item">
             <span class="title">今日二手车沟通数：</span>
-            <span class="number" :title="communicateToday">{{
-              communicateToday
-            }}</span>
+            <span class="number" :title="communicateToday">{{ communicateToday }}</span>
           </div>
           <div class="sub-item">
             <span class="title">昨日二手车沟通数：</span>
-            <span class="number" :title="communicateYesterday">{{
-              communicateYesterday
-            }}</span>
+            <span class="number" :title="communicateYesterday">{{ communicateYesterday }}</span>
           </div>
         </el-card>
       </div>
@@ -51,30 +45,30 @@
   </div>
 </template>
 <script setup lang="ts">
-import { statistics } from "@/api/home";
+import { statistics } from '@/api/home'
 interface PieItem {
-  name: string;
-  value: string | number;
+  name: string
+  value: string | number
 }
 
-const loading = ref(false);
-const totalUsedCars = ref("0"); // 二手车总数
-const totalCommunicates = ref("0"); // 沟通总数
-const usedCarsIncrementToday = ref("0"); // 今日二手车新增数
-const usedCarsIncrementYesterday = ref("0"); // 昨日二手车新增数
-const communicateYesterday = ref("0"); // 昨日沟通新增数
-const communicateToday = ref("0"); // 今日沟通新增数
-const pieData = ref<PieItem[]>([]);
+const loading = ref(false)
+const totalUsedCars = ref('0') // 二手车总数
+const totalCommunicates = ref('0') // 沟通总数
+const usedCarsIncrementToday = ref('0') // 今日二手车新增数
+const usedCarsIncrementYesterday = ref('0') // 昨日二手车新增数
+const communicateYesterday = ref('0') // 昨日沟通新增数
+const communicateToday = ref('0') // 今日沟通新增数
+const pieData = ref<PieItem[]>([])
 const seriesData = reactive<any>({
   communicates: [],
   usedCars: [],
-  legend: ["沟通", "二手车"],
-  xAxis: [],
-});
+  legend: ['沟通', '二手车'],
+  xAxis: []
+})
 const getData = async () => {
-  loading.value = true;
+  loading.value = true
   try {
-    const res = await statistics();
+    const res = await statistics()
     const {
       totalUsedCar,
       totalCommunicate,
@@ -83,47 +77,47 @@ const getData = async () => {
       communicateIncrementToday,
       communicateIncrementYesterday,
       communicates,
-      usedCars,
-    } = res.body;
-    totalUsedCars.value = totalUsedCar;
-    totalCommunicates.value = totalCommunicate;
-    usedCarsIncrementToday.value = usedCarIncrementToday;
-    usedCarsIncrementYesterday.value = usedCarIncrementYesterday;
-    communicateToday.value = communicateIncrementToday;
-    communicateYesterday.value = communicateIncrementYesterday;
-    setPie();
-    setSeriesData(communicates, usedCars);
+      usedCars
+    } = res.body
+    totalUsedCars.value = totalUsedCar
+    totalCommunicates.value = totalCommunicate
+    usedCarsIncrementToday.value = usedCarIncrementToday
+    usedCarsIncrementYesterday.value = usedCarIncrementYesterday
+    communicateToday.value = communicateIncrementToday
+    communicateYesterday.value = communicateIncrementYesterday
+    setPie()
+    setSeriesData(communicates, usedCars)
   } catch (error) {}
-};
+}
 
 // 请求数据
-getData();
+getData()
 
 // 设置饼图数据
 const setPie = () => {
   pieData.value = [
-    { value: totalCommunicates.value, name: "沟通" },
-    { value: totalUsedCars.value, name: "二手车" },
-  ];
-};
+    { value: totalCommunicates.value, name: '沟通' },
+    { value: totalUsedCars.value, name: '二手车' }
+  ]
+}
 
 // 设置二手车数据
 const setSeriesData = (communicates: any, usedCars: any) => {
-  const newCommunicates = [];
-  const newUsedCars = [];
-  const newXAxis = [];
+  const newCommunicates = []
+  const newUsedCars = []
+  const newXAxis = []
   for (const key in communicates) {
-    newCommunicates.push(Number(communicates[key]));
-    newXAxis.push(`${key}月`);
+    newCommunicates.push(Number(communicates[key]))
+    newXAxis.push(`${key}月`)
   }
 
   for (const key in usedCars) {
-    newUsedCars.push(Number(usedCars[key]));
+    newUsedCars.push(Number(usedCars[key]))
   }
-  seriesData.communicates = newCommunicates;
-  seriesData.usedCars = newUsedCars;
-  seriesData.xAxis = newXAxis;
-};
+  seriesData.communicates = newCommunicates
+  seriesData.usedCars = newUsedCars
+  seriesData.xAxis = newXAxis
+}
 </script>
 <style lang="scss" scoped>
 .total-data {

@@ -1,10 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div
-      v-if="device === 0 && sidebar.opened"
-      class="drawer-bg"
-      @click="handleClickOutside"
-    />
+    <div v-if="device === 0 && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <Sidebar class="sidebar-container" />
     <div class="main-container">
       <div :class="{ 'fixed-header': headerFixed }">
@@ -15,29 +11,29 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
-import useAppStore from "@/store/module/app";
-import useSettingsStore from "@/store/module/settings";
+import { computed } from 'vue'
+import useAppStore from '@/store/module/app'
+import useSettingsStore from '@/store/module/settings'
 
-const { sidebar, device, closeSidebar } = useAppStore();
-const { headerFixed } = useSettingsStore();
+const { sidebar, device, closeSidebar } = useAppStore()
+const { headerFixed } = useSettingsStore()
 
 const classObj = computed(() => {
   return {
     hideSidebar: !sidebar.opened,
     openSidebar: sidebar.opened,
     withoutAnimation: sidebar.withoutAnimation,
-    mobile: device === 0,
-  };
-});
+    mobile: device === 0
+  }
+})
 
 const handleClickOutside = () => {
-  closeSidebar(false);
-};
+  closeSidebar(false)
+}
 </script>
 <style lang="scss" scoped>
-@import "@/styles/mixin.scss";
-@import "@/styles/variables.scss";
+@import '@/styles/mixin.scss';
+@import '@/styles/variables.scss';
 .app-wrapper {
   @include clearfix;
   position: relative;
